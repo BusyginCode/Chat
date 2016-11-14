@@ -1,0 +1,2 @@
+
+export ajax from './ajax'
