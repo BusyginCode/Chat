@@ -43,8 +43,7 @@
         "NODE_PATH": "./src",
         "NODE_ENV": "production",
         "PORT": 8081,
-        "APIHOST": "http://163.172.179.117",
-        "APIPORT": 8080
+        "APIPORT": 8001
       }
     },
     "start-dev": {
@@ -53,8 +52,15 @@
         "NODE_PATH": "./src",
         "NODE_ENV": "development",
         "PORT": 5000,
-        "APIHOST": "http://163.172.179.117",
-        "APIPORT": 8080
+        "APIPORT": 8001
+      }
+    },
+    "start-dev-api": {
+      "command": "node ./api/server.js",
+      "env": {
+        "NODE_PATH": "./src",
+        "NODE_ENV": "development",
+        "PORT": 8001
       }
     },
     "watch-client": {
@@ -62,8 +68,7 @@
       "env": {
         "UV_THREADPOOL_SIZE": 100,
         "NODE_PATH": "./src",
-        "PORT": 3000,
-        "APIPORT": 3030
+        "PORT": 3000
       }
     },
     "build": {
@@ -86,7 +91,7 @@
     "babel-preset-stage-0": "^6.3.13",
     "babel-register": "^6.3.13",
     "babel-runtime": "^6.3.19",
-    "body-parser": "^1.14.1",
+    "body-parser": "^1.15.2",
     "compression": "^1.6.0",
     "cookie-parser": "^1.4.3",
     "css-loader": "^0.23.1",

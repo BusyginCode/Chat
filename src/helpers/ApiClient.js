@@ -16,10 +16,6 @@ export function formatUrl(path) {
   return `/api${adjustedPath}`;
 }
 
-export function getClientCookie() {
-  return cookie.load('authToken', { path: '/' });
-}
-
 export default class ApiClient {
   constructor(req) {
     methods.forEach((method) =>
@@ -27,19 +23,12 @@ export default class ApiClient {
         
         const request = superagent[method](formatUrl(path));
 
-        const authToken = (__SERVER__) ? req.cookies.authToken : getClientCookie();
-
-        console.log('authToken', authToken)
-
         if (params) {
           request.query(params);
         }
 
-        if (authToken && path !== '/signin' && path !== '/signup') {
-          request.set('Authorization', `Bearer ${authToken}`);
-        }
-
         if (data) {
+          console.log('send data ', data)
           request.send(data);
         }
 
@@ -48,13 +37,7 @@ export default class ApiClient {
             console.log("ERRORRR", err)
             reject(body || err);
           } else {
-            console.log("PASH", path)
-            if (path === '/token/validate' && authToken) {
-              console.log("IFFFFFF")
-              resolve(authToken);
-            } else {
-              resolve(body);
-            }
+            resolve(body);
           }
         });
       }));
