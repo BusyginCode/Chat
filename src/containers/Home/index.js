@@ -9,7 +9,8 @@ export default class Home extends Component {
     return (
       <div className="page-wrappers">
       <Helmet title="Main"/>
-        Hello World
+        <h2>Hello, my name is Dima and, this is my chat!</h2> 
+        <p>If your read this, you want to test some of my opensource code. You're welcome!</p>
       </div>
     );
   }

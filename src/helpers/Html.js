@@ -26,11 +26,18 @@ export default class Html extends Component {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </head>
         <body style={{ fontFamily: 'Roboto, sans-serif' }}>
-          <div id="content" dangerouslySetInnerHTML={{__html: content}}/>
+          <div  style={ styles.content } id="content" dangerouslySetInnerHTML={{__html: content}}/>
           <script dangerouslySetInnerHTML={{__html: `window.__data=${serialize(store.getState())};`}} charSet="UTF-8"/>
           <script src={assets.javascript.main} charSet="UTF-8"/>
         </body>
       </html>
     );
+  }
+}
+
+const styles = {
+  content: {
+    display: 'flex',
+    justifyContent: 'center'
   }
 }

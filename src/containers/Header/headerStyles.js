@@ -28,6 +28,8 @@ export default {
   menu: {
     display: 'flex',
     listStyle: 'none',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    minHeight: 50 + 'px',
+    alignItems: 'center'
   }
 }

@@ -31,7 +31,7 @@ export default class Header extends Component {
     return (
       this.props.token ? 
         <ul style={ styles.menu }>
-          <li onClick={this.handleExit} style={{ cursor: 'pointer' }}>
+          <li onClick={this.handleExit} style={ styles.link }>
             <a>Exit</a>
           </li>
         </ul>

@@ -32,12 +32,18 @@ export default class App extends Component {
   render() {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
-        <div>
+        <div style={ styles.app }>
           <ReactLoader />
           <Header />
-          {this.props.children}
+          { this.props.children }
         </div>
       </MuiThemeProvider>
     );
+  }
+}
+
+const styles = {
+  app: {
+    flex: 0.5,
   }
 }

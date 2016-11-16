@@ -24,7 +24,7 @@ export default {
     
   },
   textFields: {
-    width: 30 + '%',
+    width: 70 + '%',
     background: 'white'
   }
 }
