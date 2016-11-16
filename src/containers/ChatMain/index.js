@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 
 @connect()
-export default class Home extends Component {
+export default class ChatMain extends Component {
 
   render() {
     return (
       <div className="page-wrappers">
-      <Helmet title="Main"/>
-        Hello World
+        <Helmet title="Chat"/>
+        Hello Chat
       </div>
     );
   }

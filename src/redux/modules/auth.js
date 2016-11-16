@@ -32,14 +32,11 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-
     case LOAD_SUCCESS:
-    console.log("ID!!! ", action.result)
       return {
         ...state,
         loaded: true,
-        token: action.result,
-        userID: jwtDecode(action.result).user_id
+        token: 'tocken',
       };
     
     case LOAD_FAIL:
@@ -63,17 +60,11 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         password: action.password
       }
-    case CHANGE_REMEMBER_ME: 
-      return {
-        ...state,
-        rememberMe: action.rememberMe
-      }
-    case CLEAR_FORM: 
-      return initialState
     case LOGIN:
       return {
         ...state,
-        error: null
+        error: null,
+        token: 'tocken'
       };
     case LOGIN_SUCCESS:
       return {
@@ -142,15 +133,6 @@ export const clearForm = () => {
     type: CLEAR_FORM
   }
 };
-
-export const changeRemember = (value) => {
-  return {
-    type: CHANGE_REMEMBER_ME,
-    rememberMe: value
-  }
-};
-
-// {"username":"jusalex@mail.ru", "password":"11111111"}
 
 export const handleLogin = (login, password) => {
   return {

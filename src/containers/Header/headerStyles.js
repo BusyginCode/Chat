@@ -22,6 +22,12 @@ export default {
     marginLeft: 4 + 'px'
   },
   link: {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    padding: 10 + 'px'
+  },
+  menu: {
+    display: 'flex',
+    listStyle: 'none',
+    justifyContent: 'flex-end'
   }
 }

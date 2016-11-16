@@ -4,7 +4,7 @@ import { isLoaded as isAuthLoaded, load as loadAuth } from 'redux/modules/auth';
 import {
     App,
     Login,
-    LoginSuccess,
+    ChatMain,
     NotFound,
     SignUpPage,
     Home,
@@ -14,9 +14,13 @@ export default (store) => {
 
   const requireLogin = (nextState, replace, cb) => {
     const { auth } = store.getState();
-      store.dispatch(loadAuth())
-      .then(() => cb())
-      .catch(() => replace('/'))
+    console.log('TOKEN ', auth.token)
+    if (auth.token) {
+      cb()
+    } else {
+      replace('/')
+      cb()
+    }
   };
 
   /**
@@ -28,6 +32,9 @@ export default (store) => {
       <IndexRoute component={Home}/>
       <Route path="signUp" component={SignUpPage} />
       <Route path="signIn" component={Login} />
+      <Route onEnter={requireLogin}>
+        <Route path="main" component={ChatMain} />
+      </Route>
       <Route path="*" component={NotFound} status={404} />
     </Route>
   );
