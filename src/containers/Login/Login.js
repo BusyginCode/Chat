@@ -22,7 +22,7 @@ import { browserHistory } from 'react-router'
 export default class Login extends Component {
 
   handleSubmit = (event) => {
-    this.props.handleLogin()
+    this.props.handleLogin(this.props.login, this.props.password)
     browserHistory.push('/main')
   }
 

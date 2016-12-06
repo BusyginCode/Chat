@@ -69,8 +69,7 @@ export default function reducer(state = initialState, action = {}) {
     case LOGIN_SUCCESS:
       return {
         ...state,
-        token: action.result.token,
-        userID: jwtDecode(action.result.token).user_id
+        token: action.token,
       };
     case LOGIN_FAIL:
       return {
@@ -87,7 +86,6 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         token: action.result.token,
-        userID: jwtDecode(action.result.token).user_id
       };
     case SIGNUP_FAIL:
       return {
@@ -139,12 +137,14 @@ export const handleLogin = (login, password) => {
     types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
     promise: (client) => client.post('/signin', {
       data: {
-        "username": login, 
-        "password": password
+        login,
+        password,
       }
     })
   };
 };
+
+
 
 // {"email":"jusalex@mail.ru", "nickname":"jusalex", "password":"11111111"}
 

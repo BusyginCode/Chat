@@ -28,16 +28,12 @@ const app = new Express();
 const server = new http.Server(app);
 const proxy = httpProxy.createProxyServer();
 
-//app.use(bodyParser.json());
-app.use(cookieParser());
-app.use(compression());
 app.use(favicon(path.join(__dirname, '..', 'static', 'favicon.png')));
 
 app.use(Express.static(path.join(__dirname, '..', 'static')));
 
 // Proxy to API server
 app.use('/api', (req, res) => {
-  console.log('PROXY ', req.body)
   proxy.web(req, res, {target: targetUrl});
 });
 
