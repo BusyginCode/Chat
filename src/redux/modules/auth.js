@@ -67,6 +67,7 @@ export default function reducer(state = initialState, action = {}) {
         token: 'tocken'
       };
     case LOGIN_SUCCESS:
+      console.log(action)
       return {
         ...state,
         token: action.token,
