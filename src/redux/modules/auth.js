@@ -1,8 +1,8 @@
 import cookie from 'react-cookie';
 import jwtDecode from 'jwt-decode';
 
+const CHANGE_EMAIL = "CHANGE_EMAIL"
 const CHANGE_LOGIN = "CHANGE_LOGIN"
-const CHANGE_NICKNAME = "CHANGE_NICKNAME"
 const CHANGE_PASSWORD = "CHANGE_PASSWORD"
 const CLEAR_FORM = "CLEAR_FORM"
 const LOGIN = 'redux-example/auth/LOGIN';
@@ -21,11 +21,10 @@ export const LOAD_FAIL = 'sociometry-react/auth/LOAD_FAIL';
 
 const initialState = {
   userID: null,
-  login: '',
+  email: '',
   loaded: false,
   password: '',
-  rememberMe: false,
-  nickname: '',
+  login: '',
   token: null,
   error: null
 };
@@ -45,15 +44,15 @@ export default function reducer(state = initialState, action = {}) {
         loaded: true
       };
 
+    case CHANGE_EMAIL: 
+      return {
+        ...state,
+        email: action.email
+      }
     case CHANGE_LOGIN: 
       return {
         ...state,
         login: action.login
-      }
-    case CHANGE_NICKNAME: 
-      return {
-        ...state,
-        nickname: action.nickname
       }
     case CHANGE_PASSWORD: 
       return {
@@ -76,7 +75,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         user: null,
-        error: "Login error"
+        error: action.error
       };
     case SIGNUP:
       return {
@@ -84,6 +83,7 @@ export default function reducer(state = initialState, action = {}) {
         error: null
       };
     case SIGNUP_SUCCESS:
+      console.log(action)
       return {
         ...state,
         token: action.result.token,
@@ -92,31 +92,25 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         user: null,
-        error: "Sign Up Error"
-      };
-    case DELETE_TOKEN_FROM_STORE:
-      return {
-        ...state,
-        token: null,
-        userID: null
-      };
-      
+        error: action.error
+      }   
     default:
       return state;
   }
 }
 
+export const changeEmail = (value) => {
+  console.log('changeEmail', value)
+  return {
+    type: CHANGE_EMAIL,
+    email: value
+  };
+};
+
 export const changeLogin = (value) => {
   return {
     type: CHANGE_LOGIN,
     login: value
-  };
-};
-
-export const changeNickname = (value) => {
-  return {
-    type: CHANGE_NICKNAME,
-    nickname: value
   }
 };
 
@@ -138,24 +132,22 @@ export const handleLogin = (login, password) => {
     types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
     promise: (client) => client.post('/signin', {
       data: {
-        login,
+        username: login,
         password,
       }
     })
   };
 };
 
-
-
 // {"email":"jusalex@mail.ru", "nickname":"jusalex", "password":"11111111"}
 
-export const handleSignUp = (email, nickname, password) => {
+export const handleSignUp = (email, login, password) => {
   return {
     types: [SIGNUP, SIGNUP_SUCCESS, SIGNUP_FAIL],
     promise: (client) => client.post('/signup', {
       data: {
         email,
-        nickname,
+        login,
         password
       }
     })

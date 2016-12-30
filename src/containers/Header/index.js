@@ -23,6 +23,7 @@ export default class Header extends Component {
 
   handleExit = () => {
     this.props.deleteAuthStoreToken();
+    this.props.deleteAuthToken();
     browserHistory.replace('/')
   }
 

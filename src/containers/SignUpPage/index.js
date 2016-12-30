@@ -14,15 +14,25 @@ import { Notification } from 'containers'
   state => ({
     login: state.auth.login,
     password: state.auth.password,
-    rememberMe: state.auth.rememberMe,
-    nickname: state.auth.nickname,
-    signIn: state.auth.signIn,
+    email: state.auth.email,
     error: state.auth.error
   }),
   {...authActions, ...loaderActions})
 export default class SignUpPage extends Component {
 
-  handleSubmit = (event) => {};
+  handleSubmit = (event) => {
+    this.props.handleSignUp(
+      this.props.email,
+      this.props.login,
+      this.props.password
+    )
+    .then((res) => {
+      browserHistory.push('/main');
+    })
+    .catch((err) => {
+      console.log('SIGN UP CATCH')
+    })
+  };
 
   render() {
     const styles = require('../Login/LoginStyles.js')
@@ -33,28 +43,31 @@ export default class SignUpPage extends Component {
       clearForm,
       changeRemember,
       signTypeChange,
-      changeNickname
+      changeEmail
     } = this.props;
 
-    const disableButtonStyle = !this.props.login || !this.props.password || !this.props.nickname ? styles.disableButton : {}
+    const disableButtonStyle = !this.props.email || 
+      !this.props.password || !this.props.login ? styles.disableButton : {}
 
+    console.log(this.props.email, this.props.password, this.props.login)
+    
     return (
       <div style={ styles.formStyle }>
         <Helmet title="Sign Up"/>
         <span style={ styles.headerStyle }>Welcome to the Family</span>
         <TextField 
-          value={ this.props.login }
+          value={ this.props.email }
           hintText = "E-mail" 
           floatingLabelText="E-mail"
           style={ styles.textFields }
-          onChange={ (e) => changeLogin(e.target.value) }
+          onChange={ (e) => changeEmail(e.target.value) }
         />
         <TextField 
-          value={ this.props.nickname }
+          value={ this.props.login }
           hintText="Login" 
           floatingLabelText="Login"
           style={ styles.textFields }
-          onChange={ (e) => changeNickname(e.target.value) }
+          onChange={ (e) => changeLogin(e.target.value) }
         />
         <TextField 
           value={ this.props.password  }  
@@ -68,7 +81,7 @@ export default class SignUpPage extends Component {
           label="Sign Up"
           primary 
           style={{ ...styles.buttonStyle, ...disableButtonStyle }} 
-          onClick={ this.props.login && this.props.password && this.props.nickname ? this.handleSubmit : () => {} }
+          onClick={ this.props.email && this.props.password && this.props.login ? this.handleSubmit : () => {} }
         />
       </div>
     );

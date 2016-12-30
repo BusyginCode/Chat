@@ -1,8 +1,7 @@
 const mongoose = require('./mongoose');
 const async = require('async');
 const User = require('./models/user');
-
-const user = new User({ 'username': 'Oleg' });
+const dbErrors = require('./dbErrors')
 
 const open = (callback) => {
   mongoose.connection.on('open', callback);
@@ -16,37 +15,37 @@ const dropDatabase = (callback) => {
   });
 }
 
-const createUsers = (callback) => {
-  async.parallel([
-      (callback) => {
-        const vasya = new User({ 'username': 'vasya' });
-        vasya.save((err, user) => {
-          callback(err, user)
-        })
-      },
-      (callback) => {
-        const ivan = new User({ 'username': 'ivan' });
-        ivan.save((err, user) => {
-          callback(err, user)
-        })
-      },
-      (callback) => {
-        const petia = new User({ 'username': 'petia' });
-        petia.save((err, user) => {
-          callback(err, user)
-        })
-      },       
-    ], callback)
+const createUser = ({ username, password, email, callback }) => {
+  const newUser = new User({ username, email });
+  newUser.setPassword(password)
+  newUser.save((err, user) => {
+    if (err) {
+      callback(dbErrors(err.code));
+      return;
+    }
+    callback(user)
+  })
 }
 
 const close = () => {
   mongoose.disconnect();
+  console.log('Database is close.')
 }
 
-async.series([
+try {
+  open(() => { 
+    console.log('Database is open.');
+    dropDatabase(() => {
+      console.log('Database is dropped.');
+    });
+  });
+} catch (err) {
+  throw err;
+}
+
+module.exports = {
   open,
   dropDatabase,
-  createUsers,
-], (err, res) => {
-  console.log(res)
-})
+  createUser,
+  close
+}
