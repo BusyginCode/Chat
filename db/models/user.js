@@ -1,9 +1,10 @@
-const mongoose = require('../mongoose');
-const loadClass = require('mongoose-class-wrapper');
-const crypto = require('crypto');
+import mongoose from '../mongoose';
+import loadClass from 'mongoose-class-wrapper';
+import crypto from 'crypto';
+import parseUserForAPI from '../utils/parseUser';
  
-var userSchema = mongoose.Schema({
-  username: {type: String, required: true, unique: true},
+const userSchema = mongoose.Schema({
+  login: {type: String, required: true, unique: true},
   hashedPassword: {type: String},
   email: {type: String, required: true},
   salt: {type: String},
@@ -11,14 +12,14 @@ var userSchema = mongoose.Schema({
 
 class UserModel {
 
-  static authorise(username, password, callback) {
-    this.find({username: username}, (err, users) => {
+  static authorise(login, password, callback) {
+    this.find({login: login}, (err, users) => {
       if (err) throw err;
       if (users[0]) {
         callback(this.checkUserPassword(users[0], password));
         return;
       }
-      this.find({email: username}, (err, users) => {
+      this.find({email: login}, (err, users) => {
         if (err) throw err;
         callback(this.checkUserPassword(users[0], password));
       })
@@ -26,18 +27,13 @@ class UserModel {
   }
 
   static checkUserPassword(user, password) {
-    if (user && user.checkPassword(password)) {
-      return this.parseUserForAPI(user);
+    if (user) {
+      if (user.checkPassword(password)) {
+        return parseUserForAPI(user);
+      }
+      return { error: "Invalid Password" };
     }
-    return false;
-  }
-
-  static parseUserForAPI(user) {
-    return {
-      id: user._id,
-      email: user.email,
-      username: user.username,
-    }
+    return { error: "User Not Found" };
   }
  
   encryptPassword(password) {

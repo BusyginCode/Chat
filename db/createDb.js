@@ -1,7 +1,8 @@
-const mongoose = require('./mongoose');
-const async = require('async');
-const User = require('./models/user');
-const dbErrors = require('./dbErrors')
+import mongoose from './mongoose';
+import async from 'async';
+import User from './models/user';
+import dbErrors from './dbErrors';
+import parseUser from './utils/parseUser';
 
 const open = (callback) => {
   mongoose.connection.on('open', callback);
@@ -15,15 +16,15 @@ const dropDatabase = (callback) => {
   });
 }
 
-const createUser = ({ username, password, email, callback }) => {
-  const newUser = new User({ username, email });
+const createUser = ({ login, password, email, callback }) => {
+  const newUser = new User({ login, email });
   newUser.setPassword(password)
   newUser.save((err, user) => {
     if (err) {
       callback(dbErrors(err.code));
       return;
     }
-    callback(user)
+    callback(parseUser(user))
   })
 }
 

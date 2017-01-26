@@ -1,3 +1,3 @@
 export default {
-  secret: '123123'
+  secret: "My Dear Friend"
 }

@@ -24,10 +24,14 @@ export default class ApiClient {
   constructor(req) {
     methods.forEach((method) =>
       this[method] = (path, { params, data } = {}) => new Promise((resolve, reject) => {
+
+        console.log('API CLIENT !!!', formatUrl(path))
         
         const request = superagent[method](formatUrl(path));
 
         const authToken = (__SERVER__) ? req.cookies.authToken : getClientCookie();
+
+        console.log('AUTH TOKEN IS API CLIENT', authToken)
 
         if (params) {
           request.query(params);

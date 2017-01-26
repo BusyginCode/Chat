@@ -1,14 +1,14 @@
 import Express from 'express';
-const cookieParser = require('cookie-parser');
-const compression = require('compression');
-const session = require('express-session');
-const bodyParser = require('body-parser')
-const User = require('../db/models/user');
-const Db = require('../db/createDb');
-const mongoose = require('../db/mongoose');
-const jwt = require('jsonwebtoken');
-
-const config = require('./config');
+import cookieParser from 'cookie-parser';
+import compression from 'compression';
+import bodyParser from 'body-parser';
+import jwt from 'jsonwebtoken';
+import User from '../db/models/user';
+import Db from '../db/createDb';
+import mongoose from '../db/mongoose';
+import parseUser from '../db/utils/parseUser';
+import config from './config';
+import checkToken from './checkToken';
 
 const app = new Express();
 
@@ -16,49 +16,55 @@ app.use(bodyParser.json());
 
 app.use(cookieParser());
 
-const MongoStore = require('connect-mongo')(session);
-
-app.use(session({
-  secret: "SpecialKey",
-  key: "AUTH_TOKEN",
-  cookie: {
-    path: "/",
-    httpOnly: true,
-    maxAge: null,
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
-  },
-  resave: true,
-  saveUninitialized: true,
-}))
+app.get('/validateToken', checkToken, (req, res) => {
+  const { token } = req;
+  console.log('token', token);
+  if (token) {
+    User.find({ _id: token._id }, (err, users) => {
+      console.log('user', users[0]);
+      if (users[0]) {
+        res.status(200).json({ user: users[0], token: req.headers.authorization })  
+      }
+      res.status(401);
+    });
+  }
+  res.status(401);
+})
 
 app.post('/signin', (req, res) => {
   console.log('post signin ', req.body)
-  User.authorise(req.body.username, req.body.password, (user) => {
-    if (user) {
-      const token = jwt.sign({ _id: user.id, secret: config.secret })
-      res.json(Object.assign(user, { token: token }));
+  const { login, password } = req.body;
+  User.authorise(login, password, (responce) => {
+    if (responce) {
+      const token = jwt.sign({ _id: responce.id }, config.secret)
+      res.json({ user: responce, token });
+      return
     }
-    res.status(401);
-    res.end();
+    res.status(401).json({error: responce.error});
   });
-  
 });
 
 app.post('/signup', (req, res) => {
-  console.log('post signup ', req.body)
+  console.log('post signup ', req.body, config.secret)
+  const { login, password, email } = req.body;
   Db.createUser({
-    username: req.body.login,
-    password: req.body.password,
-    email: req.body.email,
+    login,
+    password,
+    email,
     callback: (responce) => {
       if (responce.error) {
         res.status(401).json({error: responce.error});
         return;
       }
-      res.json({token: responce._id});
+      const token = jwt.sign({ _id: responce.id }, config.secret);
+      res.json({ user: responce, token });
     }
   })
 });
+
+app.get('/test', checkToken, (req, res) => {
+  console.log('TEST!!! IS AUTHORISE');
+})
 
 app.listen(process.env.PORT, function() {
   console.log('API server is listen on port:' + process.env.PORT)
