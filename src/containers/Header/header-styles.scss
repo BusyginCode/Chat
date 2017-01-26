@@ -1,0 +1,32 @@
+.Header {
+    background-color: rgba(220, 220, 220, 0.2);
+  }
+.headerTitle {
+  line-height: 64px;
+  float: left;
+  color: gray;
+  cursor: pointer;
+}
+.linksContainer {
+  display: inline-block;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+}
+.headerTitleLink {
+  text-decoration: none;
+}
+.signButton {
+  margin-left: 4px;
+}
+.HeaderMenu__link {
+  cursor: pointer;
+  padding: 10px;
+}
+.HeaderMenu {
+  display: flex;
+  list-style: none;
+  justify-content: flex-end;
+  min-height: 50px;
+  align-items: center;
+}

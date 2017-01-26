@@ -16,6 +16,10 @@ export function formatUrl(path) {
   return `/api${adjustedPath}`;
 }
 
+export function getClientCookie() {
+  return cookie.load('authToken', { path: '/' });
+}
+
 export default class ApiClient {
   constructor(req) {
     methods.forEach((method) =>
@@ -23,8 +27,14 @@ export default class ApiClient {
         
         const request = superagent[method](formatUrl(path));
 
+        const authToken = (__SERVER__) ? req.cookies.authToken : getClientCookie();
+
         if (params) {
           request.query(params);
+        }
+
+        if (authToken && path !== '/signin' && path !== '/signup') {
+          request.set('authorization', `${authToken}`);
         }
 
         if (data) {

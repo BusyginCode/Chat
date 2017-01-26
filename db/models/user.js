@@ -10,6 +10,35 @@ var userSchema = mongoose.Schema({
 });
 
 class UserModel {
+
+  static authorise(username, password, callback) {
+    this.find({username: username}, (err, users) => {
+      if (err) throw err;
+      if (users[0]) {
+        callback(this.checkUserPassword(users[0], password));
+        return;
+      }
+      this.find({email: username}, (err, users) => {
+        if (err) throw err;
+        callback(this.checkUserPassword(users[0], password));
+      })
+    })
+  }
+
+  static checkUserPassword(user, password) {
+    if (user && user.checkPassword(password)) {
+      return this.parseUserForAPI(user);
+    }
+    return false;
+  }
+
+  static parseUserForAPI(user) {
+    return {
+      id: user._id,
+      email: user.email,
+      username: user.username,
+    }
+  }
  
   encryptPassword(password) {
     return crypto.createHmac('sha1', this.salt).update(password).digest('hex'); 

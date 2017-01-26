@@ -43,7 +43,7 @@
       }
     },
     "start-dev-api": {
-      "command": "node ./api/server.js",
+      "command": "babel-node ./api/server.js",
       "env": {
         "NODE_PATH": "./src",
         "NODE_ENV": "development",
@@ -86,13 +86,14 @@
     "crypto": "0.0.3",
     "css-loader": "^0.23.1",
     "express": "^4.13.3",
-    "express-session": "^1.12.1",
+    "express-session": "^1.15.0",
     "file-loader": "^0.8.5",
     "fs": "0.0.1-security",
     "gojs": "^1.6.20",
     "hoist-non-react-statics": "^1.0.3",
     "http-proxy": "^1.12.0",
     "invariant": "^2.2.0",
+    "jsonwebtoken": "^7.2.1",
     "jwt-decode": "^2.1.0",
     "less": "^2.5.3",
     "less-loader": "^2.2.1",
