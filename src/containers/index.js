@@ -1,5 +1,5 @@
 export App from './App/App';
-export Login from './Login/Login';
+export SignInPage from './SignInPage';
 export SignUpPage from './SignUpPage';
 export Header from './Header';
 export NotFound from './NotFound/NotFound';

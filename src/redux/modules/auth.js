@@ -1,23 +1,25 @@
 import cookie from 'react-cookie';
 import jwtDecode from 'jwt-decode';
 
-const LOAD_REQUEST = 'sociometry-react/auth/LOAD_REQUEST';
-const LOAD_SUCCESS = 'sociometry-react/auth/LOAD_SUCCESS';
-const LOAD_FAIL = 'sociometry-react/auth/LOAD_FAIL';
+const LOAD_REQUEST = 'chat/auth/LOAD_REQUEST';
+const LOAD_SUCCESS = 'chat/auth/LOAD_SUCCESS';
+const LOAD_FAIL = 'chat/auth/LOAD_FAIL';
+
+const CLEAR_STORE = "CHANGE_EMAIL"
 
 const CHANGE_EMAIL = "CHANGE_EMAIL"
 const CHANGE_LOGIN = "CHANGE_LOGIN"
 const CHANGE_PASSWORD = "CHANGE_PASSWORD"
-const CLEAR_FORM = "CLEAR_FORM"
-const LOGIN = 'redux-example/auth/LOGIN';
-const LOGIN_SUCCESS = 'redux-example/auth/LOGIN_SUCCESS';
-const LOGIN_FAIL = 'redux-example/auth/LOGIN_FAIL';
-const SIGNUP = 'redux-example/auth/SIGNUP';
-const SIGNUP_SUCCESS = 'redux-example/auth/SIGNUP_SUCCESS';
-const SIGNUP_FAIL = 'redux-example/auth/SIGNUP_FAIL';
-const SIGN_TYPE_CHANGE = "SIGN_TYPE_CHANGE";
-const CHANGE_REMEMBER_ME = "CHANGE_REMEMBER_ME";
-const DELETE_TOKEN_FROM_STORE = "DELETE_TOKEN_FROM_STORE";
+
+const LOGIN = 'chat/auth/LOGIN';
+const LOGIN_SUCCESS = 'chat/auth/LOGIN_SUCCESS';
+const LOGIN_FAIL = 'chat/auth/LOGIN_FAIL';
+
+const SIGNUP = 'chat/auth/SIGNUP';
+const SIGNUP_SUCCESS = 'chat/auth/SIGNUP_SUCCESS';
+const SIGNUP_FAIL = 'chat/auth/SIGNUP_FAIL';
+
+const DELETE_TOKEN_FROM_STORE = "chat/auth/DELETE_TOKEN_FROM_STORE";
 
 const initialState = {
   user: null,
@@ -32,18 +34,15 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case LOAD_SUCCESS:
-    console.log('LOAD TOKEN', action)
       return {
         ...state,
         token: action.result.token,
       };
     case LOAD_REQUEST:
-    console.log('LOAD LOAD_REQUEST', action)
       return {
         ...state,
       };
     case LOAD_FAIL:
-    console.log('LOAD LOAD_FAIL', action)
       return {
         ...state,
       };
@@ -62,13 +61,7 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         password: action.password
       }
-    case LOGIN:
-      return {
-        ...state,
-        error: null,
-      };
     case LOGIN_SUCCESS:
-      console.log(action)
       return {
         ...state,
         token: action.result.token,
@@ -78,7 +71,6 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         user: null,
-        error: action.result.error
       };
     case SIGNUP:
       return {
@@ -86,7 +78,6 @@ export default function reducer(state = initialState, action = {}) {
         error: null
       };
     case SIGNUP_SUCCESS:
-      console.log(action)
       return {
         ...state,
         token: action.result.token,
@@ -96,12 +87,15 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         user: null,
-        error: action.result.error
       }   
     case DELETE_TOKEN_FROM_STORE:
       return {
         ...state,
         token: null,
+      }
+    case CLEAR_STORE:
+      return {
+        initialState
       }
     default:
       return state;
@@ -146,6 +140,11 @@ export const handleSignUp = (email, login, password) => ({
   })
 });
 
+export const loadToken = () => ({
+  types: [LOAD_REQUEST, LOAD_SUCCESS, LOAD_FAIL],
+  promise: (client) => client.get('/validateToken')
+})
+
 export const isLoaded = (state) => state.auth.token;
 
 export const storeAuthToken = token =>
@@ -158,9 +157,6 @@ export const deleteAuthStoreToken = () => ({
   type: DELETE_TOKEN_FROM_STORE
 })
 
-
-export const loadToken = () => ({
-  types: [LOAD_REQUEST, LOAD_SUCCESS, LOAD_FAIL],
-  promise: (client) => client.get('/validateToken')
+export const clearStore = () => ({
+  type: CLEAR_STORE
 })
-

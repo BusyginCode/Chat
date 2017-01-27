@@ -20,7 +20,6 @@ export default class Html extends Component {
         <head>
           <link rel="shortcut icon" href="/favicon.ico" />
           <link rel="stylesheet" href="/reset.css" />
-          <link rel="stylesheet" href="/bootstrap.min.css" />
           <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet"  />
           <title>Chat</title>
           <meta name="viewport" content="width=device-width, initial-scale=1" />

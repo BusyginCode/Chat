@@ -1,7 +1,7 @@
 
 export default {
   headerContainer: {
-    backgroundColor: 'rgba(220, 220, 220, 0.2)'
+    backgroundColor: 'rgba(220, 220, 220, 0.6)'
   },
   headerTitle: {
     lineHeight: 64 + 'px',
@@ -23,7 +23,9 @@ export default {
   },
   link: {
     cursor: 'pointer',
-    padding: 10 + 'px'
+    padding: 10 + 'px',
+    color: '#00bcd4',
+    textDecoration: 'none',
   },
   menu: {
     display: 'flex',

@@ -6,7 +6,7 @@ import parseUserForAPI from '../utils/parseUser';
 const userSchema = mongoose.Schema({
   login: {type: String, required: true, unique: true},
   hashedPassword: {type: String},
-  email: {type: String, required: true},
+  email: {type: String, required: true, unique: true},
   salt: {type: String},
 });
 

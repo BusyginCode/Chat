@@ -1,5 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import {
+  storeAuthToken,
+  deleteAuthToken,
+  isLoaded,
+  loadToken,
+} from 'redux/modules/auth';
 import * as authActions from 'redux/modules/auth';
 import { push } from 'react-router-redux';
 import { asyncConnect } from 'redux-async-connect';
@@ -12,38 +18,28 @@ injectTapEventPlugin()
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
     const promises = [];
-    if (!authActions.isLoaded(getState())) {
-      promises.push(dispatch(authActions.loadToken()));
+    if (!isLoaded(getState())) {
+      promises.push(dispatch(loadToken()));
     }
     return Promise.all(promises);
   }
 }])
 @connect(
-  state => ({ token: state.auth.token }),
-  { ...authActions }
+  state => ({ token: state.auth.token }), { deleteAuthToken, storeAuthToken }
 )
 export default class App extends Component {
 
-  componentWillMount() {
-    this.props.loadToken()
-  }
-
   componentWillReceiveProps(nextProps) {
     if (!this.props.token && nextProps.token) {
-      this.props.storeAuthToken(nextProps.token);
+      storeAuthToken(nextProps.token);
     }
 
     if (this.props.token && !nextProps.token) {
-      this.props.deleteAuthToken();
+      deleteAuthToken();
     }
   }
 
-  componentWillUnmount() {
-    this.props.deleteAuthToken();
-  }
-
   render() {
-    console.log(this.props.token)
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
         <div style={ styles.app }>

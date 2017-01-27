@@ -18,7 +18,9 @@ import getRoutes from './routes';
 
 //var sigma = require('./helpers/build/sigma.require.js');
 
-require('promise.prototype.finally')
+import promiseFinally from 'promise.prototype.finally';
+
+promiseFinally.shim();
 
 const client = new ApiClient();
 const _browserHistory = useScroll(() => browserHistory)();

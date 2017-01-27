@@ -1,9 +1,9 @@
 import React from 'react';
 import {IndexRoute, Route, browserHistory} from 'react-router';
-import { isLoaded as isAuthLoaded, load as loadAuth } from 'redux/modules/auth';
+import { loadToken } from 'redux/modules/auth';
 import {
     App,
-    Login,
+    SignInPage,
     ChatMain,
     NotFound,
     SignUpPage,
@@ -14,13 +14,9 @@ export default (store) => {
 
   const requireLogin = (nextState, replace, cb) => {
     const { auth } = store.getState();
-    console.log('TOKEN ', auth.token)
-    if (auth.token) {
-      cb()
-    } else {
-      replace('/')
-      cb()
-    }
+    store.dispatch(loadToken())
+      .then(() => cb())
+      .catch(() => replace('/'))
   };
 
   /**
@@ -31,7 +27,7 @@ export default (store) => {
       { /* Home (main) route */ }
       <IndexRoute component={Home}/>
       <Route path="signUp" component={SignUpPage} />
-      <Route path="signIn" component={Login} />
+      <Route path="signIn" component={SignInPage} />
       <Route onEnter={requireLogin}>
         <Route path="main" component={ChatMain} />
       </Route>

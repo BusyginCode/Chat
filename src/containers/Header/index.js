@@ -1,6 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import * as authActions from 'redux/modules/auth';
+import {
+  deleteAuthToken,
+  deleteAuthStoreToken,
+} from 'redux/modules/auth';
 import { Link } from 'react-router'
 import * as loaderActions from 'redux/modules/loader';
 import FlatButton from 'material-ui/FlatButton';
@@ -9,8 +12,7 @@ import { browserHistory } from 'react-router'
 @connect(
   state => ({
     token: state.auth.token,
-  }),
-  authActions
+  })
 )
 export default class Header extends Component {
 
@@ -22,8 +24,8 @@ export default class Header extends Component {
   }
 
   handleExit = () => {
-    this.props.deleteAuthStoreToken();
-    this.props.deleteAuthToken();
+    deleteAuthToken();
+    this.props.dispatch(deleteAuthStoreToken());
     browserHistory.replace('/')
   }
 
@@ -31,19 +33,16 @@ export default class Header extends Component {
     const styles = require('./headerStyles.js')
     return (
       this.props.token ? 
-        <ul style={ styles.menu }>
-          <li onClick={this.handleExit} style={ styles.link }>
-            <a>Exit</a>
-          </li>
-        </ul>
-      : <ul style={ styles.menu }>
-          <li style={ styles.link }>
-            <Link to="/signIn">Sign In</Link>
-          </li>
-          <li style={ styles.link }>
-            <Link to="/signUp">Sign Up</Link>
-          </li>
-        </ul>
+        <div style={styles.menu}>
+          <Link style={styles.link} to="/main">Main</Link>
+          <div onClick={this.handleExit} style={ styles.link }>
+            Exit
+          </div>
+        </div>
+      : <div style={styles.menu}>
+          <Link style={styles.link} to="/signIn">Sign In</Link>
+          <Link style={styles.link} to="/signUp">Sign Up</Link>
+        </div>
     )
   }
 

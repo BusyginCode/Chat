@@ -18,34 +18,31 @@ app.use(cookieParser());
 
 app.get('/validateToken', checkToken, (req, res) => {
   const { token } = req;
-  console.log('token', token);
   if (token) {
     User.find({ _id: token._id }, (err, users) => {
       console.log('user', users[0]);
       if (users[0]) {
         res.status(200).json({ user: users[0], token: req.headers.authorization })  
       }
-      res.status(401);
+      res.status(401)
     });
   }
   res.status(401);
 })
 
 app.post('/signin', (req, res) => {
-  console.log('post signin ', req.body)
   const { login, password } = req.body;
   User.authorise(login, password, (responce) => {
-    if (responce) {
-      const token = jwt.sign({ _id: responce.id }, config.secret)
-      res.json({ user: responce, token });
+    if (responce.error) {
+      res.status(401).json({ message: responce.error });
       return
     }
-    res.status(401).json({error: responce.error});
+    const token = jwt.sign({ _id: responce.id }, config.secret)
+    res.json({ user: responce, token });
   });
 });
 
 app.post('/signup', (req, res) => {
-  console.log('post signup ', req.body, config.secret)
   const { login, password, email } = req.body;
   Db.createUser({
     login,
@@ -53,7 +50,7 @@ app.post('/signup', (req, res) => {
     email,
     callback: (responce) => {
       if (responce.error) {
-        res.status(401).json({error: responce.error});
+        res.status(401).json({ message: responce.error });
         return;
       }
       const token = jwt.sign({ _id: responce.id }, config.secret);
@@ -61,10 +58,6 @@ app.post('/signup', (req, res) => {
     }
   })
 });
-
-app.get('/test', checkToken, (req, res) => {
-  console.log('TEST!!! IS AUTHORISE');
-})
 
 app.listen(process.env.PORT, function() {
   console.log('API server is listen on port:' + process.env.PORT)

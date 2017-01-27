@@ -28,6 +28,8 @@ const app = new Express();
 const server = new http.Server(app);
 const proxy = httpProxy.createProxyServer();
 
+app.use(cookieParser());
+app.use(compression());
 app.use(favicon(path.join(__dirname, '..', 'static', 'favicon.png')));
 
 app.use(Express.static(path.join(__dirname, '..', 'static')));
