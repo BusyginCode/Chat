@@ -28,7 +28,6 @@ export default class SignInPage extends Component {
   }
 
   componentWillUnmount() {
-    console.log('COMPONENT WILL UNMOUNT')
     this.props.clearStore()
   }
 

@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import {
   storeAuthToken,
   deleteAuthToken,
-  isLoaded,
-  loadToken,
 } from 'redux/modules/auth';
 import * as authActions from 'redux/modules/auth';
 import { push } from 'react-router-redux';
@@ -18,9 +16,6 @@ injectTapEventPlugin()
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
     const promises = [];
-    if (!isLoaded(getState())) {
-      promises.push(dispatch(loadToken()));
-    }
     return Promise.all(promises);
   }
 }])
