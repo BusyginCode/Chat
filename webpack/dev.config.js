@@ -1,19 +1,25 @@
 require('babel-polyfill');
 
 // Webpack config for development
-var fs = require('fs');
-var path = require('path');
-var webpack = require('webpack');
-var assetsPath = path.resolve(__dirname, '../static/dist');
-var host = (process.env.HOST || 'localhost');
-var port = (+process.env.PORT + 1) || 3001;
+const fs = require('fs');
+const path = require('path');
+const webpack = require('webpack');
+const assetsPath = path.resolve(__dirname, '../static/dist');
+const host = (process.env.HOST || 'localhost');
+const port = (+process.env.PORT + 1) || 3001;
+
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const postcssReporter = require('postcss-reporter');
+const pleeeaseFilters = require('pleeease-filters');
+const autoprefixer = require('autoprefixer');
+const HappyPack = require('happypack');
 
 // https://github.com/halt-hammerzeit/webpack-isomorphic-tools
-var WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
-var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools'));
+const WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
+const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools'));
 
-var babelrc = fs.readFileSync('./.babelrc');
-var babelrcObject = {};
+const babelrc = fs.readFileSync('./.babelrc');
+let babelrcObject = {};
 
 try {
   babelrcObject = JSON.parse(babelrc);
@@ -22,14 +28,13 @@ try {
   console.error(err);
 }
 
-
-var babelrcObjectDevelopment = babelrcObject.env && babelrcObject.env.development || {};
+let babelrcObjectDevelopment = babelrcObject.env && babelrcObject.env.development || {};
 
 // merge global and dev-only plugins
-var combinedPlugins = babelrcObject.plugins || [];
+let combinedPlugins = babelrcObject.plugins || [];
 combinedPlugins = combinedPlugins.concat(babelrcObjectDevelopment.plugins);
 
-var babelLoaderQuery = Object.assign({}, babelrcObjectDevelopment, babelrcObject, {plugins: combinedPlugins});
+let babelLoaderQuery = Object.assign({}, babelrcObjectDevelopment, babelrcObject, {plugins: combinedPlugins});
 delete babelLoaderQuery.env;
 
 // Since we use .babelrc for client and server, and we don't want HMR enabled on the server, we have to add
@@ -37,9 +42,9 @@ delete babelLoaderQuery.env;
 
 // make sure react-transform is enabled
 babelLoaderQuery.plugins = babelLoaderQuery.plugins || [];
-var reactTransform = null;
-for (var i = 0; i < babelLoaderQuery.plugins.length; ++i) {
-  var plugin = babelLoaderQuery.plugins[i];
+let reactTransform = null;
+for (let i = 0; i < babelLoaderQuery.plugins.length; ++i) {
+  let plugin = babelLoaderQuery.plugins[i];
   if (Array.isArray(plugin) && plugin[0] === 'react-transform') {
     reactTransform = plugin;
   }
@@ -77,11 +82,10 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.jsx?$/, exclude: /node_modules/, loaders: ['babel']},
+      { test: /\.jsx?$/, exclude: /node_modules/, loaders: ['happypack/loader?id=js']},
       { test: /\.json$/, loader: 'json-loader' },
-      { test: /\.css$/, loader: "style-loader!css-loader" },
-      { test: /\.less$/, loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!less?outputStyle=expanded&sourceMap' },
-      { test: /\.scss$/, loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap' },
+      { test: /\.css$/, loader: 'style!css!postcss' },
+      { test: /\.scss$/, loader: 'style!css!postcss!resolve-url!sass?sourceMap' },
       { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff" },
       { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff" },
       { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/octet-stream" },
@@ -108,6 +112,33 @@ module.exports = {
       __DEVELOPMENT__: true,
       __DEVTOOLS__: true  // <-------- DISABLE redux-devtools HERE
     }),
+    new HappyPack({
+      id: 'js',
+      tempDir: './.cache/happypack',
+      loaders: [
+        {
+          loader: 'babel',
+          query: {
+            cacheDirectory: './.cache/babel',
+          },
+        },
+        { loader: 'eslint-loader' },
+      ],
+    }),
     webpackIsomorphicToolsPlugin.development()
-  ]
+  ],
+  postcss: wbpck => [
+    autoprefixer,
+    pleeeaseFilters,
+    postcssReporter({
+      throwError: process.env.NODE_ENV !== 'development',
+      clearMessages: true,
+    }),
+  ],
+  eslint: {
+    failOnWarning: true,
+    failOnError: true,
+    fix: true,
+    cache: true,
+  },
 };

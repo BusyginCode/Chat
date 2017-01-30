@@ -6,7 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import createStore from './redux/create';
 import ApiClient from './helpers/ApiClient';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 import {Provider} from 'react-redux';
 import { Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
@@ -15,8 +15,6 @@ import useScroll from 'scroll-behavior/lib/useStandardScroll';
 import '../node_modules/react-select/dist/react-select.css';
 import '../node_modules/react-progress-bar-plus/lib/progress-bar.css';
 import getRoutes from './routes';
-
-//var sigma = require('./helpers/build/sigma.require.js');
 
 import promiseFinally from 'promise.prototype.finally';
 

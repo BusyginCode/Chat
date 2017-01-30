@@ -2,10 +2,10 @@ require('babel-polyfill');
 
 const environment = {
   development: {
-    isProduction: false
+    isProduction: false,
   },
   production: {
-    isProduction: true
+    isProduction: true,
   }
 }[process.env.NODE_ENV || 'development'];
 

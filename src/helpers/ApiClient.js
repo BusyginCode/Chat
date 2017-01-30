@@ -23,32 +23,28 @@ export function getClientCookie() {
 export default class ApiClient {
   constructor(req) {
     methods.forEach((method) =>
-      this[method] = (path, { params, data } = {}) => new Promise((resolve, reject) => {
-        
-        const request = superagent[method](formatUrl(path));
-
-        const authToken = (__SERVER__) ? req.cookies.authToken : getClientCookie();
-
-        if (params) {
-          request.query(params);
-        }
-
-        if (authToken && path !== '/signin' && path !== '/signup') {
-          request.set('authorization', `${authToken}`);
-        }
-
-        if (data) {
-          request.send(data);
-        }
-
-        request.end((err, { body } = {}) => {
-          if (err) {
-            console.log("ERRORRR", err)
-            reject(body || err);
-          } else {
-            resolve(body);
+      this[method] = (path, { params, data } = {}) =>
+        new Promise((resolve, reject) => {
+          const request = superagent[method](formatUrl(path));
+          const authToken = (__SERVER__) ? req.cookies.authToken : getClientCookie();
+          if (params) {
+            request.query(params);
           }
-        });
-      }));
+          if (authToken && path !== '/signin' && path !== '/signup') {
+            request.set('authorization', `${authToken}`);
+          }
+          if (data) {
+            request.send(data);
+          }
+          request.end((err, { body } = {}) => {
+            if (err) {
+              console.log('ERRORRR', err); // eslint-disable-line
+              reject(body || err);
+            } else {
+              resolve(body);
+            }
+          });
+        })
+    );
   }
 }

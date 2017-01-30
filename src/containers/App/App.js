@@ -4,25 +4,35 @@ import {
   storeAuthToken,
   deleteAuthToken,
 } from 'redux/modules/auth';
-import * as authActions from 'redux/modules/auth';
-import { push } from 'react-router-redux';
 import { asyncConnect } from 'redux-async-connect';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import { Header, ReactLoader } from 'containers'
+import { Header, ReactLoader } from 'containers';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin()
+injectTapEventPlugin();
+
+const styles = {
+  app: {
+    flex: 0.5,
+  },
+};
 
 @asyncConnect([{
-  promise: ({store: {dispatch, getState}}) => {
+  promise: ({store: {}}) => {
     const promises = [];
     return Promise.all(promises);
-  }
+  },
 }])
 @connect(
-  state => ({ token: state.auth.token }), { deleteAuthToken, storeAuthToken }
+  state => ({ token: state.auth.token }),
+  { deleteAuthToken, storeAuthToken }
 )
 export default class App extends Component {
+
+  static propTypes = {
+    token: PropTypes.string,
+    children: PropTypes.object,
+  }
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.token && nextProps.token) {
@@ -44,11 +54,5 @@ export default class App extends Component {
         </div>
       </MuiThemeProvider>
     );
-  }
-}
-
-const styles = {
-  app: {
-    flex: 0.5,
   }
 }
