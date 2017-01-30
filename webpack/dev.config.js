@@ -85,7 +85,7 @@ module.exports = {
       { test: /\.jsx?$/, exclude: /node_modules/, loaders: ['happypack/loader?id=js']},
       { test: /\.json$/, loader: 'json-loader' },
       { test: /\.css$/, loader: 'style!css!postcss' },
-      { test: /\.scss$/, loader: 'style!css!postcss!resolve-url!sass?sourceMap' },
+      { test: /\.scss$/, loader: 'css?modules&importLoaders=2&sourceMap!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap=true&sourceMapContents=true' },
       { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff" },
       { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff" },
       { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/octet-stream" },
@@ -94,7 +94,7 @@ module.exports = {
       { test: webpackIsomorphicToolsPlugin.regular_expression('images'), loader: 'url-loader?limit=10240' }
     ]
   },
-  progress: true,
+  progress: false,
   resolve: {
     modulesDirectories: [
       'src',
@@ -136,8 +136,8 @@ module.exports = {
     }),
   ],
   eslint: {
-    failOnWarning: true,
-    failOnError: true,
+    failOnWarning: false,
+    failOnError: false,
     fix: true,
     cache: true,
   },

@@ -82,7 +82,7 @@ export default class SignInPage extends Component {
         <span style={styles.SignInPage__header}>Please Authorise</span>
         <TextField
           value={login}
-          errorText={ this.state.submitFlag && !login && "This field is required." }
+          errorText={this.state.submitFlag && !login && "This field is required."}
           hintText = "E-mail"
           floatingLabelText="E-mail"
           style={styles.SignInPage__input}
@@ -91,7 +91,7 @@ export default class SignInPage extends Component {
         <TextField
           value={password}
           type="password"
-          errorText={ this.state.submitFlag && !password && "This field is required." }
+          errorText={this.state.submitFlag && !password && "This field is required."}
           floatingLabelText="Password"
           hintText = "Password"
           style={styles.SignInPage__input}
@@ -99,6 +99,7 @@ export default class SignInPage extends Component {
         />
         <RaisedButton
           label="Enter"
+          className="test"
           primary
           style={styles.SignInPage__submitButton}
           onClick={this.handleSubmit}
