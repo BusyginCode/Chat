@@ -32,72 +32,72 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case LOAD_SUCCESS:
-      return {
-        ...state,
-        token: action.result.token,
-      };
-    case LOAD_REQUEST:
-      return {
-        ...state,
-      };
-    case LOAD_FAIL:
-      return {
-        ...state,
-      };
-    case CHANGE_EMAIL:
-      return {
-        ...state,
-        email: action.email
-      };
-    case CHANGE_LOGIN:
-      return {
-        ...state,
-        login: action.login
-      };
-    case CHANGE_PASSWORD:
-      return {
-        ...state,
-        password: action.password
-      };
-    case LOGIN_SUCCESS:
-      return {
-        ...state,
-        token: action.result.token,
-        user: action.result.user
-      };
-    case LOGIN_FAIL:
-      return {
-        ...state,
-        user: null,
-      };
-    case SIGNUP:
-      return {
-        ...state,
-        error: null
-      };
-    case SIGNUP_SUCCESS:
-      return {
-        ...state,
-        token: action.result.token,
-        user: action.result.user
-      };
-    case SIGNUP_FAIL:
-      return {
-        ...state,
-        user: null,
-      };
-    case DELETE_TOKEN_FROM_STORE:
-      return {
-        ...state,
-        token: null,
-      };
-    case CLEAR_STORE:
-      return {
-        initialState
-      };
-    default:
-      return state;
+  case LOAD_SUCCESS:
+    return {
+      ...state,
+      token: action.result.token,
+    };
+  case LOAD_REQUEST:
+    return {
+      ...state,
+    };
+  case LOAD_FAIL:
+    return {
+      ...state,
+    };
+  case CHANGE_EMAIL:
+    return {
+      ...state,
+      email: action.email
+    };
+  case CHANGE_LOGIN:
+    return {
+      ...state,
+      login: action.login
+    };
+  case CHANGE_PASSWORD:
+    return {
+      ...state,
+      password: action.password
+    };
+  case LOGIN_SUCCESS:
+    return {
+      ...state,
+      token: action.result.token,
+      user: action.result.user
+    };
+  case LOGIN_FAIL:
+    return {
+      ...state,
+      user: null,
+    };
+  case SIGNUP:
+    return {
+      ...state,
+      error: null
+    };
+  case SIGNUP_SUCCESS:
+    return {
+      ...state,
+      token: action.result.token,
+      user: action.result.user
+    };
+  case SIGNUP_FAIL:
+    return {
+      ...state,
+      user: null,
+    };
+  case DELETE_TOKEN_FROM_STORE:
+    return {
+      ...state,
+      token: null,
+    };
+  case CLEAR_STORE:
+    return {
+      initialState
+    };
+  default:
+    return state;
   }
 }
 

@@ -38,7 +38,6 @@ export default class ApiClient {
           }
           request.end((err, { body } = {}) => {
             if (err) {
-              console.log('ERRORRR', err); // eslint-disable-line
               reject(body || err);
             } else {
               resolve(body);

@@ -9,6 +9,7 @@ import mongoose from '../db/mongoose';
 import parseUser from '../db/utils/parseUser';
 import config from './config';
 import checkToken from './checkToken';
+import http from 'http';
 
 const app = new Express();
 
@@ -59,6 +60,18 @@ app.post('/signup', (req, res) => {
   })
 });
 
-app.listen(process.env.PORT, function() {
+const server = http.createServer(app);
+
+const io = require('socket.io').listen(server);
+io.sockets.on('connection', (socket) => {
+  console.log('Connection');
+  socket.on('message', (text) => {
+    console.log('Server Message');
+    socket.emit('message', text);
+  });
+})
+
+server.listen(process.env.PORT, function() {
   console.log('API server is listen on port:' + process.env.PORT)
 })
+

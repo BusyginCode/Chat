@@ -34,4 +34,4 @@ export default {
     minHeight: 50 + 'px',
     alignItems: 'center'
   }
-}
+};

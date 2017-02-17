@@ -29,7 +29,7 @@ export default {
     fontSize: '17px',
   },
   "SignInPage__errorNotification": {
-    backgroundColor: 'rgb(244, 67, 54)', 
+    backgroundColor: 'rgb(244, 67, 54)',
     textAlign: 'center'
   }
-}
+};

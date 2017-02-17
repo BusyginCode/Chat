@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import {
   storeAuthToken,
   deleteAuthToken,
+  loadToken,
+  isLoaded
 } from 'redux/modules/auth';
 import { asyncConnect } from 'redux-async-connect';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -18,8 +20,11 @@ const styles = {
 };
 
 @asyncConnect([{
-  promise: ({store: {}}) => {
+  promise: ({store: {dispatch, getState}}) => {
     const promises = [];
+    if (!isLoaded(getState())) {
+      promises.push(dispatch(loadToken()));
+    }
     return Promise.all(promises);
   },
 }])
@@ -35,6 +40,7 @@ export default class App extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log('Will Receive Props', nextProps);
     if (!this.props.token && nextProps.token) {
       storeAuthToken(nextProps.token);
     }

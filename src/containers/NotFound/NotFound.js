@@ -22,7 +22,7 @@ export default function NotFound() {
 
 const styles = {
   messageContainer: {
-    position: 'absolute', 
+    position: 'absolute',
     top: 250 + 'px',
     width: 100 + '%'
   },
@@ -35,4 +35,4 @@ const styles = {
     position: 'absolute',
     width: 100 + '%'
   }
-}
+};

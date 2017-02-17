@@ -12,9 +12,15 @@ import {
 
 export default (store) => {
   const requireLogin = (nextState, replace, cb) => {
-    store.dispatch(loadToken())
-      .then(() => cb())
-      .catch(() => replace('/'));
+    const { auth } = store.getState();
+    if (auth.token) {
+      cb();
+    } else {
+      console.log('Router false');
+      store.dispatch(loadToken())
+        .then(() => cb())
+        .catch(() => replace('/'));
+    }
   };
 
   /**

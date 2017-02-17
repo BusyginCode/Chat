@@ -5,8 +5,7 @@ import * as authActions from 'redux/modules/auth';
 import * as loaderActions from 'redux/modules/loader';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import { browserHistory } from 'react-router'
-import CircularProgress from 'material-ui/CircularProgress';
+import { browserHistory } from 'react-router';
 import Snackbar from 'material-ui/Snackbar';
 
 @connect(
@@ -19,17 +18,31 @@ import Snackbar from 'material-ui/Snackbar';
   {...authActions, ...loaderActions})
 export default class SignUpPage extends Component {
 
+  static propTypes = {
+    login: PropTypes.string,
+    password: PropTypes.string,
+    email: PropTypes.string,
+    error: PropTypes.object,
+    stopLoad: PropTypes.func,
+    startLoad: PropTypes.func,
+    handleSignUp: PropTypes.func,
+    changeLogin: PropTypes.func,
+    changePassword: PropTypes.func,
+    changeEmail: PropTypes.func,
+    clearStore: PropTypes.func,
+  }
+
   state = {
     submitErrorMessage: '',
     submitFlag: false,
   }
 
   componentWillUnmount() {
-    this.props.clearStore()
+    this.props.clearStore();
   }
 
-  handleSubmit = (event) => {
-    this.setState({ submitFlag: true })
+  handleSubmit = () => {
+    this.setState({ submitFlag: true });
     if (this.props.email && this.props.password && this.props.login) {
       this.props.startLoad();
       this.props.handleSignUp(
@@ -37,79 +50,76 @@ export default class SignUpPage extends Component {
         this.props.login,
         this.props.password
       )
-      .then((res) => {
+      .then(() => {
         browserHistory.push('/main');
       })
       .catch((err) => this.setState({ submitErrorMessage: err.message }))
-      .finally(() => this.props.stopLoad())
+      .finally(() => this.props.stopLoad());
     }
   }
 
-  handleLoginChange = (e) => {
-    this.setState({ submitFlag: false })
-    this.props.changeLogin(e.target.value)
+  handleLoginChange = (event) => {
+    this.setState({ submitFlag: false });
+    this.props.changeLogin(event.target.value);
   }
 
-  handlePasswordChange = (e) => {
-    this.setState({ submitFlag: false })
-    this.props.changePassword(e.target.value);
+  handlePasswordChange = (event) => {
+    this.setState({ submitFlag: false });
+    this.props.changePassword(event.target.value);
   }
 
-  handleEmailChange = (e) => {
-    this.setState({ submitFlag: false })
-    this.props.changeEmail(e.target.value);
+  handleEmailChange = (event) => {
+    this.setState({ submitFlag: false });
+    this.props.changeEmail(event.target.value);
   }
 
-  handleRequestCloseNotification = () => 
+  handleRequestCloseNotification = () =>
     this.setState({ submitErrorMessage: '' });
 
   render() {
     const styles = require('./styles');
 
-    const { 
-      changeLogin,
-      changePassword,
-      changeEmail,
+    const {
       email,
       login,
       password,
     } = this.props;
-    
+
     return (
       <div style={styles.SignUpPage}>
         <Helmet title="Sign Up"/>
         <span style={styles.SignUpPage__header}>
           Welcome to the Family
         </span>
-        <TextField 
+        <TextField
           value={email}
           hintText="E-mail"
           errorText={this.state.submitFlag && !email && "This field is required."}
           floatingLabelText="E-mail"
-          style={styles.SignUpPage__input}
+          style={{ ...styles.SignUpPage__input, marginTop: '26px' }}
           onChange={this.handleEmailChange}
         />
-        <TextField 
+        <TextField
           value={login}
           hintText="Login"
           errorText={this.state.submitFlag && !login && "This field is required."}
           floatingLabelText="Login"
-          style={ styles.SignUpPage__input }
+          style={styles.SignUpPage__input}
           onChange={this.handleLoginChange}
         />
-        <TextField 
-          value={password}  
+        <TextField
+          value={password}
           hintText="Password"
-          errorText={this.state.submitFlag && !password && "This field is required."} 
+          errorText={this.state.submitFlag && !password && "This field is required."}
           type="password"
           floatingLabelText="Password"
           style={styles.SignUpPage__input}
           onChange={this.handlePasswordChange}
         />
-        <RaisedButton 
+        <RaisedButton
           label="Sign Up"
-          primary 
-          style={styles.SignUpPage__submitButton} 
+          primary
+          style={styles.SignUpPage__submitButton}
           onClick={this.handleSubmit}
         />
         <Snackbar
