@@ -19,6 +19,10 @@ Object.keys(webpackConfig.entry).forEach(key => webpackConfig.entry[key].unshift
 const server = new WebpackDevServer(compiler, {
   hot: true,
   publicPath: '/dist/',
+  stats: {
+    chunks: false,
+    colors: true,
+  }
 });
 
 server.listen(port, host, () =>

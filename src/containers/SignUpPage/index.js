@@ -92,6 +92,7 @@ export default class SignUpPage extends Component {
           Welcome to the Family
         </span>
         <TextField
+          id="sign_up_email"
           value={email}
           hintText="E-mail"
           errorText={this.state.submitFlag && !email && "This field is required."}
@@ -100,6 +101,7 @@ export default class SignUpPage extends Component {
           onChange={this.handleEmailChange}
         />
         <TextField
+          id="sign_up_login"
           value={login}
           hintText="Login"
           errorText={this.state.submitFlag && !login && "This field is required."}
@@ -108,6 +110,7 @@ export default class SignUpPage extends Component {
           onChange={this.handleLoginChange}
         />
         <TextField
+          id="sign_up_password"
           value={password}
           hintText="Password"
           errorText={this.state.submitFlag && !password && "This field is required."}

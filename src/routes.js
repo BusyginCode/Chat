@@ -16,10 +16,12 @@ export default (store) => {
     if (auth.token) {
       cb();
     } else {
-      console.log('Router false');
       store.dispatch(loadToken())
         .then(() => cb())
-        .catch(() => replace('/'));
+        .catch(() => {
+          replace('/');
+          cb();
+        });
     }
   };
 

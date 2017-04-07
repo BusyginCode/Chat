@@ -15,7 +15,8 @@ injectTapEventPlugin();
 
 const styles = {
   app: {
-    flex: 0.5,
+    flex: 1,
+    padding: '0 20px',
   },
 };
 
@@ -40,7 +41,6 @@ export default class App extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('Will Receive Props', nextProps);
     if (!this.props.token && nextProps.token) {
       storeAuthToken(nextProps.token);
     }
@@ -51,12 +51,20 @@ export default class App extends Component {
   }
 
   render() {
+    const containerStyle = {
+      marginTop: '70px',
+      maxWidth: '1900px',
+      display: 'flex',
+      justifyContent: 'center',
+    };
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
         <div style={ styles.app }>
           <ReactLoader />
           <Header />
-          { this.props.children }
+          <div style={containerStyle}>
+            { this.props.children }
+          </div>
         </div>
       </MuiThemeProvider>
     );

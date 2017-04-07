@@ -30,12 +30,14 @@ export default class Header extends Component {
     return (
       this.props.token ?
         <div style={styles.menu}>
+          <Link style={styles.link} to="/">Home</Link>
           <Link style={styles.link} to="/main">Main</Link>
           <div onClick={this.handleExit} style={ styles.link }>
             Exit
           </div>
         </div>
       : <div style={styles.menu}>
+          <Link style={styles.link} to="/">Home</Link>
           <Link style={styles.link} to="/signIn">Sign In</Link>
           <Link style={styles.link} to="/signUp">Sign Up</Link>
         </div>

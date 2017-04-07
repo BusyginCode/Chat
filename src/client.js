@@ -14,6 +14,7 @@ import useScroll from 'scroll-behavior/lib/useStandardScroll';
 import '../node_modules/react-select/dist/react-select.css';
 import '../node_modules/react-progress-bar-plus/lib/progress-bar.css';
 import getRoutes from './routes';
+// import { deleteAuthToken } from 'redux/modules/auth';
 
 import promiseFinally from 'promise.prototype.finally';
 
@@ -26,9 +27,12 @@ const store = createStore(_browserHistory, client, window.__data);
 const history = syncHistoryWithStore(_browserHistory, store);
 
 const component = (
-  <Router render={(props) =>
-        <ReduxAsyncConnect {...props} helpers={{}} filter={item => !item.deferred} />
-      } history={history}>
+  <Router
+    render={  // eslint-disable-line
+      (props) => <ReduxAsyncConnect {...props} helpers={{}} filter={item => !item.deferred} /> // eslint-disable-line
+    }
+    history={history}
+  >
     {getRoutes(store)}
   </Router>
 );
@@ -56,3 +60,7 @@ if (__DEVTOOLS__ && !window.devToolsExtension) {
     dest
   );
 }
+
+// window.onbeforeunload = () => deleteAuthToken();
+
+if (module.hot) { module.hot.accept(); }

@@ -81,14 +81,16 @@ export default class SignInPage extends Component {
         <Helmet title="Sign In"/>
         <span style={styles.SignInPage__header}>Please Authorise</span>
         <TextField
+          id="sign_in_email"
           value={login}
           errorText={this.state.submitFlag && !login && "This field is required."}
-          hintText = "E-mail"
           floatingLabelText="E-mail"
+          hintText = "E-mail"
           style={styles.SignInPage__input}
           onChange={this.handleLoginChange}
         />
         <TextField
+          id="sign_in_password"
           value={password}
           type="password"
           errorText={this.state.submitFlag && !password && "This field is required."}

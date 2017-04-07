@@ -8,7 +8,6 @@ export default {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    marginTop: '50px'
   },
   "SignUpPage__header": {
     fontSize: '3em',
