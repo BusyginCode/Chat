@@ -1,13 +1,24 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import * as ChatReduser from 'redux/modules/chat';
 import Helmet from 'react-helmet';
 import InsetList from './InsetList';
 import MenuBar from './MenuBar';
 import Chat from './Chat';
 import io from 'socket.io-client';
 
-@connect()
+@connect(
+  state => ({
+    token: state.auth.token,
+  }),
+  { ...ChatReduser }
+)
 export default class ChatMain extends Component {
+
+  static propTypes = {
+    handleGetUser: PropTypes.func.isRequired,
+    handleMutation: PropTypes.func.isRequired,
+  }
 
   constructor() {
     super();
@@ -19,7 +30,11 @@ export default class ChatMain extends Component {
   }
 
   handleSend = () => {
-    this.socket.emit('message', "Client World!");
+    this.props.handleGetUser();
+  }
+
+  handleSendMutation = () => {
+    this.props.handleMutation();
   }
 
   render() {
@@ -35,6 +50,12 @@ export default class ChatMain extends Component {
           <InsetList />
         </div>
         <div style={styles.chat}>
+          <button onClick={this.handleSend}>
+            Graph
+          </button>
+          <button onClick={this.handleSendMutation}>
+            Mutation
+          </button>
           <Chat />
         </div>
       </div>

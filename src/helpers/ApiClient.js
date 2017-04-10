@@ -23,10 +23,15 @@ export function getClientCookie() {
 export default class ApiClient {
   constructor(req) {
     methods.forEach((method) =>
-      this[method] = (path, { params, data } = {}) =>
+      this[method] = (path, { headers, params, data } = {}) =>
         new Promise((resolve, reject) => {
           const request = superagent[method](formatUrl(path));
           const authToken = (__SERVER__) ? req.cookies.authToken : getClientCookie();
+          if (headers) {
+            Object.keys(headers).forEach(header => {
+              request.set(header, headers[header]);
+            });
+          }
           if (params) {
             request.query(params);
           }
@@ -43,7 +48,7 @@ export default class ApiClient {
               resolve(body);
             }
           });
-        })
+        })// .catch(err => console.log(err))
     );
   }
 }

@@ -19,12 +19,17 @@ const dropDatabase = (callback) => {
 const createUser = ({ login, password, email, callback }) => {
   const newUser = new User({ login, email });
   newUser.setPassword(password)
-  newUser.save((err, user) => {
-    if (err) {
-      callback(dbErrors(err.code));
-      return;
-    }
-    callback(parseUser(user))
+  return new Promise((res, rej) => {
+    const finalCallback = callback || (() => {})
+    newUser.save((err, user) => {
+      if (err) {
+        finalCallback(dbErrors(err.code));
+        return;
+      }
+      const newUser = parseUser(user);
+      finalCallback(newUser)
+      res(newUser)
+    })
   })
 }
 
@@ -34,7 +39,7 @@ const close = () => {
 }
 
 try {
-  open(() => { 
+  open(() => {
     console.log('Database is open.');
     dropDatabase(() => {
       console.log('Database is dropped.');

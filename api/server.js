@@ -10,8 +10,13 @@ import parseUser from '../db/utils/parseUser';
 import config from './config';
 import checkToken from './checkToken';
 import http from 'http';
+import httpProxy from 'http-proxy';
+import mainConfig from '../src/config';
 
 const app = new Express();
+const proxy = httpProxy.createProxyServer();
+const graphQlUrl = `http://${mainConfig.graphQlHost}:${mainConfig.graphQlPort}`;
+const graphQlServer = require('./graphQl/server');
 
 app.use(bodyParser.json());
 
@@ -19,14 +24,13 @@ app.use(cookieParser());
 
 app.get('/validateToken', checkToken, (req, res) => {
   const { token } = req;
-  console.log('validate token ', token)
+  console.log('validate token ')
   if (token) {
     User.find({ _id: token._id }, (err, users) => {
-      console.log('user', users[0]);
       if (users[0]) {
         res.status(200).json({ user: users[0], token: req.headers.authorization })
       }
-      res.status(401)
+      res.status(401);
     });
   }
   res.status(401);
@@ -60,6 +64,15 @@ app.post('/signup', (req, res) => {
     }
   })
 });
+
+app.post('/graphql', checkToken, (req, res) => {
+  const { token } = req;
+  console.log('graphql token ', token)
+  if (token) {
+    proxy.web(req, res, {target: graphQlUrl});
+  }
+  res.status(401);
+})
 
 const server = http.createServer(app);
 
