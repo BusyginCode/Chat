@@ -21,5 +21,7 @@ export default {
   menuContainer: {
     flex: 0.3,
     backgroundColor: 'rgba(40, 47, 55, 0.8)',
+    overflow: 'auto',
+    minWidth: '300px',
   }
 };

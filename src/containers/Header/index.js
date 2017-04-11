@@ -5,6 +5,8 @@ import {
   deleteAuthStoreToken,
 } from 'redux/modules/auth';
 import { Link, browserHistory } from 'react-router';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 
 @connect(
   state => ({
@@ -18,6 +20,17 @@ export default class Header extends Component {
     token: PropTypes.string,
     deleteAuthStoreToken: PropTypes.func,
   }
+
+  state = {
+    searchText: '',
+  }
+
+  handleChangeSearchText = (event) => {
+    console.log(event, event.keyCode);
+    this.setState({ searchText: e.target.value });
+  }
+
+  handleSubmit = () => {}
 
   handleExit = () => {
     deleteAuthToken();
@@ -48,6 +61,15 @@ export default class Header extends Component {
     const styles = require('./headerStyles.js');
     return (
       <nav style={ styles.headerContainer }>
+        <span style={ styles.headerTitle }>Little Chat</span>
+        <TextField
+          style={{height: '50px'}}
+          value={this.state.searchText}
+          floatingLabelText="Find friends"
+          hintText = "Search"
+          onChange={this.handleChangeSearchText}
+        />
+        <RaisedButton label="Search" onClick={this.handleSubmit} />
         { this.renderLinks() }
       </nav>
     );

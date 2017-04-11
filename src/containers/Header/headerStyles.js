@@ -5,13 +5,9 @@ export default {
     left: 0,
     top: 0,
     width: '100%',
-    backgroundColor: '#00bcd4'
-  },
-  headerTitle: {
-    lineHeight: 64 + 'px',
-    float: 'left',
-    color: 'gray',
-    cursor: 'pointer'
+    backgroundColor: '#00bcd4',
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   linksContainer: {
     display: 'inline-block',
@@ -37,5 +33,13 @@ export default {
     justifyContent: 'flex-end',
     minHeight: 50 + 'px',
     alignItems: 'center'
+  },
+  headerTitle: {
+    color: 'white',
+    fontWeight: 'bold',
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: '15px',
+    fontSize: '23px',
   }
 };

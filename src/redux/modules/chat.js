@@ -6,8 +6,10 @@ export const GET_MUTATION = 'sociometry-react/chat/GET_USER';
 export const GET_MUTATION_SUCCESS = 'sociometry-react/chat/GET_USER_SUCCESS';
 export const GET_MUTATION_FAIL = 'sociometry-react/chat/GET_USER_FAIL';
 
+export const CHANGE_MENU_INSET = 'sociometry-react/chat/CHANGE_MENU_INSET';
+
 export const initialState = {
-  load: -1,
+  choosenMenuInset: 'friends',
 };
 
 export default function reducer(state = initialState, action) {
@@ -42,9 +44,19 @@ export default function reducer(state = initialState, action) {
     return {
       ...state,
     };
+  case CHANGE_MENU_INSET:
+    return {
+      ...state,
+      choosenMenuInset: action.inset
+    };
   default: return state;
   }
 }
+
+export const handleChangeMenuInset = (inset) => ({
+  type: CHANGE_MENU_INSET,
+  inset
+});
 
 export const handleGetUser = () => ({
   types: [GET_USER, GET_USER_SUCCESS, GET_USER_FAIL],

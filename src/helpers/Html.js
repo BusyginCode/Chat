@@ -21,6 +21,10 @@ export default class Html extends Component {
           <link rel="shortcut icon" href="/favicon.ico" />
           <link rel="stylesheet" href="/reset.css" />
           <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet"  />
+          {Object.keys(assets.styles).map((style, key) =>
+            <link href={assets.styles[style]} key={key} media="screen, projection"
+                  rel="stylesheet" type="text/css" charSet="UTF-8"/>
+          )}
           <title>Chat</title>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </head>

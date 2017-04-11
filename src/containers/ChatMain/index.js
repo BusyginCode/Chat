@@ -9,7 +9,7 @@ import io from 'socket.io-client';
 
 @connect(
   state => ({
-    token: state.auth.token,
+    choosenMenuInset: state.chat.choosenMenuInset,
   }),
   { ...ChatReduser }
 )
@@ -18,6 +18,8 @@ export default class ChatMain extends Component {
   static propTypes = {
     handleGetUser: PropTypes.func.isRequired,
     handleMutation: PropTypes.func.isRequired,
+    handleChangeMenuInset: PropTypes.func.isRequired,
+    choosenMenuInset: PropTypes.string.isRequired,
   }
 
   constructor() {
@@ -44,7 +46,10 @@ export default class ChatMain extends Component {
       <div style={styles.chatContainer}>
         <Helmet title="Chat"/>
         <div style={styles.menuBar}>
-          <MenuBar />
+          <MenuBar
+            handleChangeMenuInset={this.props.handleChangeMenuInset}
+            choosenInset={this.props.choosenMenuInset}
+          />
         </div>
         <div style={styles.menuContainer}>
           <InsetList />

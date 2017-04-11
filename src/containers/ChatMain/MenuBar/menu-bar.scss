@@ -1,6 +1,19 @@
 .MenuBar__inset {
-  background: red;
   &:hover {
-    opacity: 0.5,
+    .MenuBar__inset-title {
+      font-size: 20px;
+    }
+    .MenuBar__inset-logo {
+      zoom: 1.15;
+    }
+  }
+}
+
+.MenuBar__inset-active {
+  .MenuBar__inset-title {
+    font-size: 20px;
+  }
+  .MenuBar__inset-logo {
+    zoom: 1.15;
   }
 }
