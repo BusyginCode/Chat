@@ -33,6 +33,20 @@ const createUser = ({ login, password, email, callback }) => {
   })
 }
 
+const addUserFriend = ({ userId, friendId }) => {
+  console.log('USER ID !!', userId, ' FRINED ID!! ', friendId);
+  return User.find({ _id: userId }, (err, users) => {
+    if (users[0] && users[0]._id !== userId) {
+      users[0].friends.push(friendId);
+      users[0].save()
+    }
+  })
+}
+
+const findUsers = ({ login }) => {
+  return { users: User.find({ login: login }) };
+}
+
 const close = () => {
   mongoose.disconnect();
   console.log('Database is close.')
@@ -53,5 +67,7 @@ module.exports = {
   open,
   dropDatabase,
   createUser,
-  close
+  close,
+  addUserFriend,
+  findUsers
 }

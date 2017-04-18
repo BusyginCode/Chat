@@ -1,5 +1,9 @@
 import cookie from 'react-cookie';
 
+export const GET_USER = 'little-chat/auth/GET_USER';
+export const GET_USER_SUCCESS = 'little-chat/auth/GET_USER_SUCCESS';
+export const GET_USER_FAIL = 'little-chat/auth/GET_USER_FAIL';
+
 const LOAD_REQUEST = 'chat/auth/LOAD_REQUEST';
 const LOAD_SUCCESS = 'chat/auth/LOAD_SUCCESS';
 const LOAD_FAIL = 'chat/auth/LOAD_FAIL';
@@ -32,10 +36,27 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case GET_USER:
+    console.log('get user', action);
+    return {
+      ...state,
+    };
+  case GET_USER_SUCCESS:
+    console.log('get user success', action);
+    return {
+      ...state,
+      user: action.result.data.user,
+    };
+  case GET_USER_FAIL:
+    console.log('get user fail', action);
+    return {
+      ...state,
+    };
   case LOAD_SUCCESS:
     return {
       ...state,
       token: action.result.token,
+      user: action.result.user,
     };
   case LOAD_REQUEST:
     return {
@@ -91,6 +112,7 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       token: null,
+      user: null,
     };
   case CLEAR_STORE:
     return {
@@ -158,4 +180,14 @@ export const deleteAuthStoreToken = () => ({
 
 export const clearStore = () => ({
   type: CLEAR_STORE
+});
+
+export const handleGetUser = (id) => ({
+  types: [GET_USER, GET_USER_SUCCESS, GET_USER_FAIL],
+  promise: (client) => client.post('/graphql', {
+    data: '{user(id: "' + id + '") {id, login, email, friends}}',
+    headers: {
+      "Content-Type": "application/graphql"
+    }
+  })
 });

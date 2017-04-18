@@ -2,12 +2,13 @@ import mongoose from '../mongoose';
 import loadClass from 'mongoose-class-wrapper';
 import crypto from 'crypto';
 import parseUserForAPI from '../utils/parseUser';
- 
+
 const userSchema = mongoose.Schema({
   login: {type: String, required: true, unique: true},
   hashedPassword: {type: String},
   email: {type: String, required: true, unique: true},
   salt: {type: String},
+  friends: {type: Array}
 });
 
 class UserModel {
@@ -35,11 +36,11 @@ class UserModel {
     }
     return { error: "User Not Found" };
   }
- 
+
   encryptPassword(password) {
-    return crypto.createHmac('sha1', this.salt).update(password).digest('hex'); 
+    return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
   }
- 
+
   setPassword(password) {
   	this.salt = Math.random();
   	this.hashedPassword = this.encryptPassword(password)
@@ -48,10 +49,10 @@ class UserModel {
   checkPassword(password) {
   	return this.encryptPassword(password) === this.hashedPassword;
   }
- 
+
 }
- 
-// Add methods from class to schema 
+
+// Add methods from class to schema
 userSchema.plugin(loadClass, UserModel);
- 
+
 module.exports = mongoose.model('User', userSchema);

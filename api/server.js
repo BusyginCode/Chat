@@ -24,16 +24,16 @@ app.use(cookieParser());
 
 app.get('/validateToken', checkToken, (req, res) => {
   const { token } = req;
-  console.log('validate token ')
+  console.log('validate token ', token)
   if (token) {
     User.find({ _id: token._id }, (err, users) => {
       if (users[0]) {
-        res.status(200).json({ user: users[0], token: req.headers.authorization })
+        res.status(200).json({ user: parseUser(users[0]), token: req.headers.authorization })
       }
-      res.status(401);
+      res.status(200);
     });
   }
-  res.status(401);
+  res.status(200);
 })
 
 app.post('/signin', (req, res) => {

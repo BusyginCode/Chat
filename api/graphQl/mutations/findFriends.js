@@ -1,10 +1,7 @@
-
 const Db = require('../../../db/createDb');
 
 module.exports = (args) => {
-  return Db.createUser({
+  return Db.findUsers({
     login: args.login,
-    password: args.password,
-    email: args.email,
   });
 }

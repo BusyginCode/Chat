@@ -1,6 +1,7 @@
 const graphql = require('graphql');
 const GraphQLObjectType = graphql.GraphQLObjectType;
 const GraphQLString = graphql.GraphQLString;
+const GraphQLList = graphql.GraphQLList;
 
 module.exports = new GraphQLObjectType({
   name: 'User',
@@ -17,6 +18,10 @@ module.exports = new GraphQLObjectType({
     email: {
       type: GraphQLString,
       description: "User email",
+    },
+    friends: {
+      type: new GraphQLList(GraphQLString),
+      description: "List of friends id's",
     }
   }
 });
