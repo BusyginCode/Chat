@@ -16,7 +16,7 @@ import io from 'socket.io-client';
 export default class ChatMain extends Component {
 
   static propTypes = {
-    handleGetUser: PropTypes.func.isRequired,
+    handleGetUser: PropTypes.func,
     handleMutation: PropTypes.func.isRequired,
     handleChangeMenuInset: PropTypes.func.isRequired,
     choosenMenuInset: PropTypes.string.isRequired,

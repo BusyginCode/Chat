@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { asyncConnect } from 'redux-async-connect';
 import * as ChatReduser from 'redux/modules/chat';
-import * as AuthReduser from 'redux/modules/auth';
+import * as AuthReduser from 'redux/modules/auth'; // eslint-disable-line
+import { handleGetFriends, isLoadedFriends } from 'redux/modules/auth'; // eslint-disable-line
 import FriendInset from './FriendInset';
 import ChatInset from './ChatInset';
 import TextField from 'material-ui/TextField';
@@ -10,29 +12,6 @@ import Dialog from 'material-ui/Dialog';
 import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import Spinner from '../../../components/Spinner';
-
-var friends = [ // eslint-disable-line
-  {
-    login: 'Dima',
-    logo: 'logo',
-  },
-  {
-    login: 'Dima',
-    logo: 'logo',
-  },
-  {
-    login: 'Dima',
-    logo: 'logo',
-  },
-  {
-    login: 'Dima',
-    logo: 'logo',
-  },
-  {
-    login: 'Dima',
-    logo: 'logo',
-  },
-];
 
 var chats = [ // eslint-disable-line
   {
@@ -62,10 +41,20 @@ var chats = [ // eslint-disable-line
   },
 ];
 
+@asyncConnect([{
+  promise: ({store: {dispatch, getState}}) => {
+    const promises = [];
+    if (!isLoadedFriends(getState())) {
+      promises.push(dispatch(handleGetFriends(getState().auth.user.friends)));
+    }
+    return Promise.all(promises);
+  }
+}])
 @connect(
   state => ({
     choosenMenuInset: state.chat.choosenMenuInset,
     user: state.auth.user,
+    friends: state.auth.friends,
   }),
   { ...ChatReduser, ...AuthReduser }
 )
@@ -74,9 +63,12 @@ export default class InsetList extends Component {
   static propTypes = {
     choosenMenuInset: PropTypes.string,
     user: PropTypes.object,
+    friends: PropTypes.array,
     handleAddUserFriend: PropTypes.func,
     handleFindFriends: PropTypes.func,
     handleGetUser: PropTypes.func,
+    handleGetFriends: PropTypes.func,
+    handleGetFriend: PropTypes.func,
   }
 
   state = {
@@ -86,9 +78,13 @@ export default class InsetList extends Component {
     isFriendsModalOpen: false,
   }
 
+  componentWillMount() {
+    // this.props.handleGetFriends(this.props.user.friends);
+  }
+
   getInsets() {
     switch (this.props.choosenMenuInset) {
-    case 'friends': return friends.map(friend => <FriendInset key={Math.random()} {...friend} />);
+    case 'friends': return this.props.friends && this.props.friends.map(friend => <FriendInset key={Math.random()} {...friend} />);
     case 'chats': return chats.map(chat => <ChatInset key={Math.random()} {...chat} />);
     default: return [];
     }
@@ -127,6 +123,7 @@ export default class InsetList extends Component {
   handleAddUserFriend = (userId, friendId) => {
     this.props.handleAddUserFriend(userId, friendId)
       .then(() => this.props.handleGetUser(userId))
+      .then(() => this.props.handleGetFriend(friendId))
       .catch((err) => console.error(err));
   }
 

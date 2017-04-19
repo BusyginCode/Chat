@@ -4,28 +4,37 @@ export const GET_USER = 'little-chat/auth/GET_USER';
 export const GET_USER_SUCCESS = 'little-chat/auth/GET_USER_SUCCESS';
 export const GET_USER_FAIL = 'little-chat/auth/GET_USER_FAIL';
 
-const LOAD_REQUEST = 'chat/auth/LOAD_REQUEST';
-const LOAD_SUCCESS = 'chat/auth/LOAD_SUCCESS';
-const LOAD_FAIL = 'chat/auth/LOAD_FAIL';
+export const GET_USERS = 'little-chat/auth/GET_USERS';
+export const GET_USERS_SUCCESS = 'little-chat/auth/GET_USERS_SUCCESS';
+export const GET_USERS_FAIL = 'little-chat/auth/GET_USERS_FAIL';
 
-const CLEAR_STORE = 'CHANGE_EMAIL';
+export const GET_FRIEND = 'little-chat/auth/GET_FRIEND';
+export const GET_FRIEND_SUCCESS = 'little-chat/auth/GET_FRIEND_SUCCESS';
+export const GET_FRIEND_FAIL = 'little-chat/auth/GET_FRIEND_FAIL';
 
-const CHANGE_EMAIL = 'CHANGE_EMAIL';
-const CHANGE_LOGIN = 'CHANGE_LOGIN';
-const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
+export const LOAD_REQUEST = 'chat/auth/LOAD_REQUEST';
+export const LOAD_SUCCESS = 'chat/auth/LOAD_SUCCESS';
+export const LOAD_FAIL = 'chat/auth/LOAD_FAIL';
 
-const LOGIN = 'chat/auth/LOGIN';
-const LOGIN_SUCCESS = 'chat/auth/LOGIN_SUCCESS';
-const LOGIN_FAIL = 'chat/auth/LOGIN_FAIL';
+export const CLEAR_STORE = 'CHANGE_EMAIL';
 
-const SIGNUP = 'chat/auth/SIGNUP';
-const SIGNUP_SUCCESS = 'chat/auth/SIGNUP_SUCCESS';
-const SIGNUP_FAIL = 'chat/auth/SIGNUP_FAIL';
+export const CHANGE_EMAIL = 'CHANGE_EMAIL';
+export const CHANGE_LOGIN = 'CHANGE_LOGIN';
+export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 
-const DELETE_TOKEN_FROM_STORE = 'chat/auth/DELETE_TOKEN_FROM_STORE';
+export const LOGIN = 'chat/auth/LOGIN';
+export const LOGIN_SUCCESS = 'chat/auth/LOGIN_SUCCESS';
+export const LOGIN_FAIL = 'chat/auth/LOGIN_FAIL';
+
+export const SIGNUP = 'chat/auth/SIGNUP';
+export const SIGNUP_SUCCESS = 'chat/auth/SIGNUP_SUCCESS';
+export const SIGNUP_FAIL = 'chat/auth/SIGNUP_FAIL';
+
+export const DELETE_TOKEN_FROM_STORE = 'chat/auth/DELETE_TOKEN_FROM_STORE';
 
 const initialState = {
   user: null,
+  friends: null,
   email: '',
   loaded: false,
   password: '',
@@ -49,6 +58,40 @@ export default function reducer(state = initialState, action = {}) {
     };
   case GET_USER_FAIL:
     console.log('get user fail', action);
+    return {
+      ...state,
+    };
+  case GET_USERS:
+    console.log('get users', action);
+    return {
+      ...state,
+    };
+  case GET_USERS_SUCCESS:
+    console.log('get users success', action);
+    return {
+      ...state,
+      friends: action.result.data.users,
+    };
+  case GET_USERS_FAIL:
+    console.log('get users fail', action);
+    return {
+      ...state,
+    };
+  case GET_FRIEND:
+    console.log('get friend', action);
+    return {
+      ...state,
+    };
+  case GET_FRIEND_SUCCESS:
+    console.log('get friend success', action);
+    const friends = state.friends || [];
+    const newFriends = [...friends, action.result.data.user];
+    return {
+      ...state,
+      friends: newFriends,
+    };
+  case GET_FRIEND_FAIL:
+    console.log('get friend fail', action);
     return {
       ...state,
     };
@@ -123,6 +166,14 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 
+const getFriendsQLString = (ids) => {
+  let res = '[';
+  ids.forEach(id => {
+    res += `"${id}",`;
+  });
+  return res.slice(0, -1).concat(']');
+};
+
 export const changeEmail = (value) => ({
   type: CHANGE_EMAIL,
   email: value
@@ -168,6 +219,8 @@ export const loadToken = () => ({
 
 export const isLoaded = (state) => state.auth.token;
 
+export const isLoadedFriends = (state) => state.auth.friends;
+
 export const storeAuthToken = token =>
   cookie.save('authToken', token, { path: '/' });
 
@@ -191,3 +244,26 @@ export const handleGetUser = (id) => ({
     }
   })
 });
+
+export const handleGetFriend = (id) => ({
+  types: [GET_FRIEND, GET_FRIEND_SUCCESS, GET_FRIEND_FAIL],
+  promise: (client) => client.post('/graphql', {
+    data: '{user(id: "' + id + '") {id, login, email, friends}}',
+    headers: {
+      "Content-Type": "application/graphql"
+    }
+  })
+});
+
+export const handleGetFriends = (ids) => {
+  console.log('HANDLE GET FRIENDS');
+  return {
+    types: [GET_USERS, GET_USERS_SUCCESS, GET_USERS_FAIL],
+    promise: (client) => client.post('/graphql', {
+      data: '{users(ids: ' + getFriendsQLString(ids) + ') {id, login, email, friends}}',
+      headers: {
+        "Content-Type": "application/graphql"
+      }
+    })
+  };
+};
