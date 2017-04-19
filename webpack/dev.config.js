@@ -1,3 +1,4 @@
+"use strict";
 require('babel-polyfill');
 
 // Webpack config for development

@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import Loader from 'react-loader';
+import React, { Component, PropTypes } from 'react';
 import ProgressBar from 'react-progress-bar-plus';
 import { connect } from 'react-redux';
 
@@ -7,6 +6,11 @@ import { connect } from 'react-redux';
   load: state.loader.load
 }))
 export default class ReactLoader extends Component {
+
+  static propTypes = {
+  	load: PropTypes.number,
+  }
+
   render() {
     return (
       <ProgressBar percent={this.props.load} intervalTime={100} autoIncrement spinner={false} />

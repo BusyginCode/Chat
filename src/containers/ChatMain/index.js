@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
+import { asyncConnect } from 'redux-async-connect';
 import { connect } from 'react-redux';
+import { handleGetFriends, isLoadedFriends } from 'redux/modules/auth'; // eslint-disable-line
 import * as ChatReduser from 'redux/modules/chat';
 import Helmet from 'react-helmet';
 import InsetList from './InsetList';
@@ -7,6 +9,15 @@ import MenuBar from './MenuBar';
 import Chat from './Chat';
 import io from 'socket.io-client';
 
+@asyncConnect([{
+  promise: ({store: {dispatch, getState}}) => {
+    const promises = [];
+    if (!isLoadedFriends(getState())) {
+      promises.push(dispatch(handleGetFriends(getState().auth.user.friends)));
+    }
+    return Promise.all(promises);
+  }
+}])
 @connect(
   state => ({
     choosenMenuInset: state.chat.choosenMenuInset,

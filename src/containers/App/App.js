@@ -4,7 +4,7 @@ import {
   storeAuthToken,
   deleteAuthToken,
   loadToken,
-  isLoaded
+  isLoaded,
 } from 'redux/modules/auth';
 import { asyncConnect } from 'redux-async-connect';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';

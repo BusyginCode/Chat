@@ -1,9 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { asyncConnect } from 'redux-async-connect';
 import * as ChatReduser from 'redux/modules/chat';
-import * as AuthReduser from 'redux/modules/auth'; // eslint-disable-line
-import { handleGetFriends, isLoadedFriends } from 'redux/modules/auth'; // eslint-disable-line
+import * as AuthReduser from 'redux/modules/auth';
 import FriendInset from './FriendInset';
 import ChatInset from './ChatInset';
 import TextField from 'material-ui/TextField';
@@ -41,15 +39,6 @@ var chats = [ // eslint-disable-line
   },
 ];
 
-@asyncConnect([{
-  promise: ({store: {dispatch, getState}}) => {
-    const promises = [];
-    if (!isLoadedFriends(getState())) {
-      promises.push(dispatch(handleGetFriends(getState().auth.user.friends)));
-    }
-    return Promise.all(promises);
-  }
-}])
 @connect(
   state => ({
     choosenMenuInset: state.chat.choosenMenuInset,
