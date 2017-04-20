@@ -34,10 +34,18 @@ const createUser = ({ login, password, email, callback }) => {
 }
 
 const addUserFriend = ({ userId, friendId }) => {
-  console.log('USER ID !!', userId, ' FRINED ID!! ', friendId);
   return User.find({ _id: userId }, (err, users) => {
     if (users[0] && users[0]._id !== userId) {
       users[0].friends.push(friendId);
+      users[0].save()
+    }
+  })
+}
+
+const removeUserFriend = ({ userId, friendId }) => {
+  return User.find({ _id: userId }, (err, users) => {
+    if (users[0]) {
+      users[0].friends = users[0].friends.filter(id => id !== friendId);
       users[0].save()
     }
   })
@@ -69,5 +77,6 @@ module.exports = {
   createUser,
   close,
   addUserFriend,
-  findUsers
+  findUsers,
+  removeUserFriend
 }

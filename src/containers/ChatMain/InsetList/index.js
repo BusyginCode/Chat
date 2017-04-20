@@ -2,14 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import * as ChatReduser from 'redux/modules/chat';
 import * as AuthReduser from 'redux/modules/auth';
-import FriendInset from './FriendInset';
-import ChatInset from './ChatInset';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import Dialog from 'material-ui/Dialog';
-import { List, ListItem } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
-import Spinner from '../../../components/Spinner';
+import * as FriendsReduser from 'redux/modules/friends';
+import FriendInset from './components/FriendInset';
+import ChatInset from './components/ChatInset';
+import SearchPanel from './components/SearchPanel';
+import FindFriendModal from './components/FindFriendModal';
+const styles = require('./styles');
 
 var chats = [ // eslint-disable-line
   {
@@ -43,9 +41,9 @@ var chats = [ // eslint-disable-line
   state => ({
     choosenMenuInset: state.chat.choosenMenuInset,
     user: state.auth.user,
-    friends: state.auth.friends,
+    friends: state.friends.list,
   }),
-  { ...ChatReduser, ...AuthReduser }
+  { ...ChatReduser, ...AuthReduser, ...FriendsReduser }
 )
 export default class InsetList extends Component {
 
@@ -58,120 +56,89 @@ export default class InsetList extends Component {
     handleGetUser: PropTypes.func,
     handleGetFriends: PropTypes.func,
     handleGetFriend: PropTypes.func,
+    handleRemoveFriend: PropTypes.func,
+    handleSetUser: PropTypes.func,
   }
 
   state = {
     isSubmit: false,
     searchText: '',
-    findedPeople: undefined,
+    findedFriends: undefined,
     isFriendsModalOpen: false,
-  }
-
-  componentWillMount() {
-    // this.props.handleGetFriends(this.props.user.friends);
   }
 
   getInsets() {
     switch (this.props.choosenMenuInset) {
-    case 'friends': return this.props.friends && this.props.friends.map(friend => <FriendInset key={Math.random()} {...friend} />);
+    case 'friends': return this.props.friends &&
+      this.props.friends.map(friend =>
+        <FriendInset
+          key={Math.random()}
+          onRemoveFriends={() => this.handleRemoveUserFriend(friend.id)} // eslint-disable-line
+          {...friend}
+        />
+      );
     case 'chats': return chats.map(chat => <ChatInset key={Math.random()} {...chat} />);
     default: return [];
     }
   }
 
-  handleChangeSearchText = (event) => {
-    console.log(event, event.keyCode);
-    this.setState({ searchText: event.target.value });
-  }
+  handleChangeSearchText = (event) => this.setState({ searchText: event.target.value });
 
-  handleSubmit = () => {
+  handleFindFriend = () => {
     this.setState({ isSubmit: true });
     this.props.handleFindFriends(this.state.searchText)
       .then((res) => {
-        console.log('RES ', res);
         const users = res.data.findFriends.users || [];
         if (users.length) {
           this.setState({
             isFriendsModalOpen: true,
             searchText: '',
-            findedPeople: users,
+            findedFriends: users,
           });
         }
       })
-      .catch((err) => console.error(err))
+      .catch((err) => console.error(err)) // eslint-disable-line
       .finally(() => this.setState({ isSubmit: false }));
   }
 
-  handleCloseFindFriendsModal = () => {
+  handleCloseFindFriendsModal = () =>
     this.setState({
       isFriendsModalOpen: false,
-      findedPeople: undefined,
+      findedFriends: undefined,
     });
+
+  handleRemoveUserFriend = (friendId) => {
+    this.props.handleRemoveFriend(this.props.user.id, friendId)
+      .then((res) => {
+        console.log(res);
+        // this.props.handleSetUser()
+      });
   }
 
-  handleAddUserFriend = (userId, friendId) => {
+  handleAddUserFriend = (userId, friendId) =>
     this.props.handleAddUserFriend(userId, friendId)
       .then(() => this.props.handleGetUser(userId))
       .then(() => this.props.handleGetFriend(friendId))
-      .catch((err) => console.error(err));
-  }
+      .catch((err) => console.error(err)); // eslint-disable-line
 
   render() {
-    const styles = require('./styles');
-
     return (
       <div style={styles.insetList}>
-        <div>
-          {this.getInsets()}
-        </div>
-        {this.props.choosenMenuInset === 'friends' &&
-          <div style={styles.searchPanel}>
-            {!this.state.isSubmit ?
-              <div style={{ textAlign: 'center' }}>
-                <TextField
-                  style={{width: '100%'}}
-                  inputStyle={{color: 'white'}}
-                  value={this.state.searchText}
-                  floatingLabelText="Find friends"
-                  hintText = "Search"
-                  onChange={this.handleChangeSearchText}
-                />
-                <RaisedButton
-                  style={{width: '50%'}}
-                  label="Search"
-                  onClick={this.handleSubmit}
-                />
-              </div>
-            : <Spinner />
-            }
-          </div>
-        }
-        <Dialog
-          title="Finded users:"
-          modal={false}
-          open={Boolean(this.state.findedPeople)}
-          onRequestClose={this.handleCloseFindFriendsModal}
-          contentStyle={{maxHeight: '500px', minHeight: '500px', overflowY: 'auto'}}
-        >
-          <List>
-            {this.state.findedPeople && this.state.findedPeople.map(man =>
-              <div key={Math.random()}>
-                <ListItem
-                  primaryText={man.login}
-                  rightIcon={!this.props.user.friends.includes(man.id) ?
-                    <RaisedButton
-                      label="Add"
-                      primary
-                      onClick={() => this.handleAddUserFriend(this.props.user.id, man.id)} // eslint-disable-line
-                    />
-                    : <div>Added</div>
-                  }
-                />
-                <Divider />
-              </div>
-            )}
-          </List>
-        </Dialog>
+        <div>{this.getInsets()}</div>
+        <SearchPanel
+          onSubmit={this.handleFindFriend}
+          onSearchTextChange={this.handleChangeSearchText}
+          searchText={this.state.searchText}
+          isSubmit={this.state.isSubmit}
+          choosenMenuInset={this.props.choosenMenuInset}
+        />
+        <FindFriendModal
+          onClose={this.handleCloseFindFriendsModal}
+          findedFriends={this.state.findedFriends}
+          userFriends={this.props.user && this.props.user.friends}
+          onAddFriend={this.handleAddUserFriend}
+          userId={this.props.user && this.props.user.id}
+        />
       </div>
     );
   }

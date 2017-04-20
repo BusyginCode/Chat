@@ -1,12 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { asyncConnect } from 'redux-async-connect';
 import { connect } from 'react-redux';
-import { handleGetFriends, isLoadedFriends } from 'redux/modules/auth'; // eslint-disable-line
+import { handleGetFriends, isLoadedFriends } from 'redux/modules/friends';
 import * as ChatReduser from 'redux/modules/chat';
 import Helmet from 'react-helmet';
 import InsetList from './InsetList';
-import MenuBar from './MenuBar';
-import Chat from './Chat';
+import MenuBar from './components/MenuBar';
+import Chat from './components/Chat';
 import io from 'socket.io-client';
 
 @asyncConnect([{

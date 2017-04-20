@@ -8,6 +8,7 @@ const usersType = require('./models/users');
 const createUser = require('./mutations/createUser');
 const addFriend = require('./mutations/addFriend');
 const findFriends = require('./mutations/findFriends');
+const removeFriend = require('./mutations/removeFriend');
 
 module.exports = new GraphQLObjectType({
   name: 'Mutation',
@@ -63,6 +64,23 @@ module.exports = new GraphQLObjectType({
         const users = findFriends(args)
         return new Promise(res => res(users))
       }
-    }
+    },
+    removeFriend: {
+      type: usersType,
+      args: {
+        friendId: {
+          name: 'Friend Id',
+          type: GraphQLString
+        },
+        userId: {
+          name: 'User Id',
+          type: GraphQLString
+        },
+      },
+      resolve: (source, args) => {
+        const newUser = removeFriend(args)
+        return new Promise(res => res(newUser))
+      }
+    },
   }
 });

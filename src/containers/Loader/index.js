@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 export default class ReactLoader extends Component {
 
   static propTypes = {
-  	load: PropTypes.number,
+    load: PropTypes.number,
   }
 
   render() {

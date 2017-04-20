@@ -23,7 +23,6 @@ export default class SignInPage extends Component {
   static propTypes = {
     password: PropTypes.string,
     login: PropTypes.string,
-    clearStore: PropTypes.func,
     startLoad: PropTypes.func,
     stopLoad: PropTypes.func,
     handleLogin: PropTypes.func,
@@ -34,10 +33,6 @@ export default class SignInPage extends Component {
   state = {
     submitErrorMessage: '',
     submitFlag: false,
-  }
-
-  componentWillUnmount() {
-    this.props.clearStore();
   }
 
   handleSubmit = () => {
