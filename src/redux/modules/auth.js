@@ -102,10 +102,7 @@ export default function reducer(state = initialState, action = {}) {
         token: null,
         user: null,
       };
-    case CLEAR_STORE:
-      return {
-        initialState
-      };
+    case CLEAR_STORE: return initialState;
     default:
       return state;
   }

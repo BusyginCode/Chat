@@ -6,6 +6,7 @@ import auth from './auth';
 import friends from './friends';
 import chat from './chat';
 import loader from './loader';
+import snackbar from './snackbar';
 
 export default combineReducers({
   routing: routerReducer,
@@ -14,4 +15,5 @@ export default combineReducers({
   loader,
   chat,
   friends,
+  snackbar,
 });

@@ -7,7 +7,11 @@ export default {
     margin: '15px auto',
   },
   inputContainer: {
-    textAlign: 'center'
+    textAlign: 'left',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    width: '100%',
   },
   textFieldStyle: {
     width: '100%'

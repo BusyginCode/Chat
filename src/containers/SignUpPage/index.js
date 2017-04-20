@@ -3,10 +3,11 @@ import {connect} from 'react-redux';
 import Helmet from 'react-helmet';
 import * as authActions from 'redux/modules/auth';
 import * as loaderActions from 'redux/modules/loader';
+import { openSnackBar } from 'redux/modules/snackbar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import { browserHistory } from 'react-router';
-import Snackbar from 'material-ui/Snackbar';
+const styles = require('./styles');
 
 @connect(
   state => ({
@@ -15,7 +16,7 @@ import Snackbar from 'material-ui/Snackbar';
     email: state.auth.email,
     error: state.auth.error
   }),
-  {...authActions, ...loaderActions})
+  { ...authActions, ...loaderActions, openSnackBar })
 export default class SignUpPage extends Component {
 
   static propTypes = {
@@ -30,15 +31,11 @@ export default class SignUpPage extends Component {
     changePassword: PropTypes.func,
     changeEmail: PropTypes.func,
     clearStore: PropTypes.func,
+    openSnackBar: PropTypes.func,
   }
 
   state = {
-    submitErrorMessage: '',
     submitFlag: false,
-  }
-
-  componentWillUnmount() {
-    this.props.clearStore();
   }
 
   handleSubmit = () => {
@@ -53,7 +50,11 @@ export default class SignUpPage extends Component {
       .then(() => {
         browserHistory.push('/main');
       })
-      .catch((err) => this.setState({ submitErrorMessage: err.message }))
+      .catch((err) => {
+        this.props.openSnackBar({
+          message: err.message,
+        });
+      })
       .finally(() => this.props.stopLoad());
     }
   }
@@ -73,12 +74,7 @@ export default class SignUpPage extends Component {
     this.props.changeEmail(event.target.value);
   }
 
-  handleRequestCloseNotification = () =>
-    this.setState({ submitErrorMessage: '' });
-
   render() {
-    const styles = require('./styles');
-
     const {
       email,
       login,
@@ -124,13 +120,6 @@ export default class SignUpPage extends Component {
           primary
           style={styles.SignUpPage__submitButton}
           onClick={this.handleSubmit}
-        />
-        <Snackbar
-          open={Boolean(this.state.submitErrorMessage)}
-          message={this.state.submitErrorMessage}
-          autoHideDuration={2000}
-          onRequestClose={this.handleRequestCloseNotification}
-          bodyStyle={styles.SignUpPage__errorNotification}
         />
       </div>
     );

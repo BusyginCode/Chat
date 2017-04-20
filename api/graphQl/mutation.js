@@ -49,6 +49,7 @@ module.exports = new GraphQLObjectType({
       },
       resolve: (source, args) => {
         const newUser = addFriend(args)
+        console.log('NEW USER ', newUser)
         return new Promise(res => res(newUser))
       }
     },
@@ -66,7 +67,7 @@ module.exports = new GraphQLObjectType({
       }
     },
     removeFriend: {
-      type: usersType,
+      type: userType,
       args: {
         friendId: {
           name: 'Friend Id',
@@ -79,6 +80,7 @@ module.exports = new GraphQLObjectType({
       },
       resolve: (source, args) => {
         const newUser = removeFriend(args)
+        console.log('REMOVE USER ', newUser)
         return new Promise(res => res(newUser))
       }
     },

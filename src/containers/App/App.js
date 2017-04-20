@@ -9,7 +9,7 @@ import {
 import { asyncConnect } from 'redux-async-connect';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import { Header, ReactLoader } from 'containers';
+import { Header, ReactLoader, SnackBar } from 'containers';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
@@ -65,6 +65,7 @@ export default class App extends Component {
           <div style={containerStyle}>
             { this.props.children }
           </div>
+          <SnackBar />
         </div>
       </MuiThemeProvider>
     );

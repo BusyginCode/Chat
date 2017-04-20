@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
-import Spinner from '../../../../../components/Spinner';
 import RaisedButton from 'material-ui/RaisedButton';
 const styles = require('./styles');
 
@@ -10,40 +9,50 @@ export default class SearchPanel extends Component {
     onSubmit: PropTypes.func,
     onSearchTextChange: PropTypes.func,
     searchText: PropTypes.string,
-    isSubmit: PropTypes.bool,
     choosenMenuInset: PropTypes.string,
+  }
+
+  state = {
+    isSubmit: false,
+  }
+
+  handleSubmit = () => {
+    this.setState({ isSubmit: true });
+    if (this.props.searchText) {
+      this.props.onSubmit()
+        .finally(() => this.setState({ isSubmit: false }));
+    }
+  }
+
+  handleChange = (event) => {
+    this.setState({ isSubmit: false });
+    this.props.onSearchTextChange(event);
   }
 
   render() {
     const {
-      onSubmit,
-      onSearchTextChange,
       searchText,
-      isSubmit,
       choosenMenuInset
     } = this.props;
-
     return (
       choosenMenuInset === 'friends' &&
         <div style={styles.searchPanel}>
-          {!isSubmit &&
-            <div style={styles.inputContainer}>
-              <TextField
-                style={styles.textFieldStyle}
-                inputStyle={styles.textFieldInputStyle}
-                value={searchText}
-                floatingLabelText="Find friends"
-                hintText="Search"
-                onChange={onSearchTextChange}
-              />
-              <RaisedButton
-                style={styles.submitButton}
-                label="Search"
-                onClick={onSubmit}
-              />
-            </div>
-          }
-          {isSubmit && <Spinner />}
+          <div style={styles.inputContainer}>
+            <TextField
+              style={styles.textFieldStyle}
+              inputStyle={styles.textFieldInputStyle}
+              errorText={this.state.isSubmit && !searchText && "This field is required."}
+              value={searchText}
+              floatingLabelText="Find friends"
+              hintText="Search"
+              onChange={this.handleChange}
+            />
+            <RaisedButton
+              style={styles.submitButton}
+              label="Search"
+              onClick={this.handleSubmit}
+            />
+          </div>
         </div>
     );
   }

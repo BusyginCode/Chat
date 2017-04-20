@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import * as ChatReduser from 'redux/modules/chat';
 import * as AuthReduser from 'redux/modules/auth';
 import * as FriendsReduser from 'redux/modules/friends';
+import { openSnackBar } from 'redux/modules/snackbar';
 import FriendInset from './components/FriendInset';
 import ChatInset from './components/ChatInset';
 import SearchPanel from './components/SearchPanel';
@@ -43,7 +44,7 @@ var chats = [ // eslint-disable-line
     user: state.auth.user,
     friends: state.friends.list,
   }),
-  { ...ChatReduser, ...AuthReduser, ...FriendsReduser }
+  { ...ChatReduser, ...AuthReduser, ...FriendsReduser, openSnackBar }
 )
 export default class InsetList extends Component {
 
@@ -58,10 +59,10 @@ export default class InsetList extends Component {
     handleGetFriend: PropTypes.func,
     handleRemoveFriend: PropTypes.func,
     handleSetUser: PropTypes.func,
+    openSnackBar: PropTypes.func,
   }
 
   state = {
-    isSubmit: false,
     searchText: '',
     findedFriends: undefined,
     isFriendsModalOpen: false,
@@ -85,8 +86,7 @@ export default class InsetList extends Component {
   handleChangeSearchText = (event) => this.setState({ searchText: event.target.value });
 
   handleFindFriend = () => {
-    this.setState({ isSubmit: true });
-    this.props.handleFindFriends(this.state.searchText)
+    return this.props.handleFindFriends(this.state.searchText)
       .then((res) => {
         const users = res.data.findFriends.users || [];
         if (users.length) {
@@ -95,10 +95,11 @@ export default class InsetList extends Component {
             searchText: '',
             findedFriends: users,
           });
+        } else {
+          this.props.openSnackBar({ message: "User not found" });
         }
       })
       .catch((err) => console.error(err)) // eslint-disable-line
-      .finally(() => this.setState({ isSubmit: false }));
   }
 
   handleCloseFindFriendsModal = () =>
@@ -110,8 +111,8 @@ export default class InsetList extends Component {
   handleRemoveUserFriend = (friendId) => {
     this.props.handleRemoveFriend(this.props.user.id, friendId)
       .then((res) => {
-        console.log(res);
-        // this.props.handleSetUser()
+        this.props.handleSetUser(res.data.user);
+        this.props.handleGetFriends(res.data.user.friends);
       });
   }
 
@@ -122,14 +123,24 @@ export default class InsetList extends Component {
       .catch((err) => console.error(err)); // eslint-disable-line
 
   render() {
+    const insets = this.getInsets();
     return (
       <div style={styles.insetList}>
-        <div>{this.getInsets()}</div>
+        <div>{insets}</div>
+        {!insets.length && this.props.choosenMenuInset === 'friends' &&
+          <div style={styles.emptyListMessage}>
+            Your friends will be here
+          </div>
+        }
+        {!insets.length && this.props.choosenMenuInset === 'chats' &&
+          <div style={styles.emptyListMessage}>
+            Your chats will be here
+          </div>
+        }
         <SearchPanel
           onSubmit={this.handleFindFriend}
           onSearchTextChange={this.handleChangeSearchText}
           searchText={this.state.searchText}
-          isSubmit={this.state.isSubmit}
           choosenMenuInset={this.props.choosenMenuInset}
         />
         <FindFriendModal

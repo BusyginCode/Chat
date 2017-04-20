@@ -1,4 +1,6 @@
-.FriendInset {
+.FriendInset__login {
   color: gray;
-  border-bottom: 2px solid gray;
+  &:hover {
+    color: white;
+  }
 }

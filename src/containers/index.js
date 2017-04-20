@@ -6,3 +6,4 @@ export NotFound from './NotFound/NotFound';
 export Home from './Home';
 export ReactLoader from './Loader';
 export ChatMain from './ChatMain';
+export SnackBar from './SnackBar';

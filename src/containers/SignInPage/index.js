@@ -3,10 +3,11 @@ import {connect} from 'react-redux';
 import Helmet from 'react-helmet';
 import * as authActions from 'redux/modules/auth';
 import * as loaderActions from 'redux/modules/loader';
+import { openSnackBar } from 'redux/modules/snackbar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import { browserHistory } from 'react-router';
-import Snackbar from 'material-ui/Snackbar';
+const styles = require('./styles');
 
 @connect(
   state => ({
@@ -17,7 +18,7 @@ import Snackbar from 'material-ui/Snackbar';
     signIn: state.auth.signIn,
     error: state.auth.error
   }),
-  { ...authActions, ...loaderActions })
+  { ...authActions, ...loaderActions, openSnackBar })
 export default class SignInPage extends Component {
 
   static propTypes = {
@@ -28,10 +29,10 @@ export default class SignInPage extends Component {
     handleLogin: PropTypes.func,
     changeLogin: PropTypes.func,
     changePassword: PropTypes.func,
+    openSnackBar: PropTypes.func,
   }
 
   state = {
-    submitErrorMessage: '',
     submitFlag: false,
   }
 
@@ -45,7 +46,11 @@ export default class SignInPage extends Component {
             browserHistory.replace('/main');
           }
         })
-        .catch((err) => this.setState({ submitErrorMessage: err.message }))
+        .catch((err) => {
+          this.props.openSnackBar({
+            message: err.message,
+          });
+        })
         .finally(() => this.props.stopLoad());
     }
   }
@@ -60,12 +65,7 @@ export default class SignInPage extends Component {
     this.props.changePassword(event.target.value);
   }
 
-  handleRequestCloseNotification = () =>
-    this.setState({ submitErrorMessage: '' });
-
   render() {
-    const styles = require('./styles');
-
     const {
       login,
       password,
@@ -100,13 +100,6 @@ export default class SignInPage extends Component {
           primary
           style={styles.SignInPage__submitButton}
           onClick={this.handleSubmit}
-        />
-        <Snackbar
-          open={Boolean(this.state.submitErrorMessage)}
-          message={this.state.submitErrorMessage}
-          autoHideDuration={2000}
-          onRequestClose={this.handleRequestCloseNotification}
-          bodyStyle={styles.SignInPage__errorNotification}
         />
       </div>
     );

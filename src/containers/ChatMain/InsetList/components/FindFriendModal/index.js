@@ -15,9 +15,13 @@ export default class FindFriendModal extends Component {
     userId: PropTypes.string,
   }
 
+  handleClose = (userId, friendId) => {
+    this.props.onAddFriend(userId, friendId);
+    this.props.onClose();
+  }
+
   render() {
     const {
-      onAddFriend,
       onClose,
       findedFriends,
       userFriends,
@@ -40,7 +44,7 @@ export default class FindFriendModal extends Component {
                   <RaisedButton
                     label="Add"
                     primary
-                    onClick={() => onAddFriend(userId, man.id)} // eslint-disable-line
+                    onClick={() => this.handleClose(userId, man.id)} // eslint-disable-line
                   />
                   : <div>Added</div>
                 }

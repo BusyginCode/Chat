@@ -34,20 +34,26 @@ const createUser = ({ login, password, email, callback }) => {
 }
 
 const addUserFriend = ({ userId, friendId }) => {
-  return User.find({ _id: userId }, (err, users) => {
-    if (users[0] && users[0]._id !== userId) {
-      users[0].friends.push(friendId);
-      users[0].save()
-    }
+  return new Promise((res, rej) => {
+    User.find({ _id: userId }, (err, users) => {
+      if (users[0] && users[0]._id !== userId) {
+        users[0].friends.push(friendId);
+        users[0].save()
+        res(users[0])
+      }
+    })
   })
 }
 
 const removeUserFriend = ({ userId, friendId }) => {
-  return User.find({ _id: userId }, (err, users) => {
-    if (users[0]) {
-      users[0].friends = users[0].friends.filter(id => id !== friendId);
-      users[0].save()
-    }
+  return new Promise((res, rej) => {
+    User.find({ _id: userId }, (err, users) => {
+      if (users[0]) {
+        users[0].friends = users[0].friends.filter(id => id !== friendId);
+        users[0].save()
+        res(users[0])
+      }
+    })
   })
 }
 
