@@ -26,7 +26,7 @@ export default class SignInPage extends Component {
     login: PropTypes.string,
     startLoad: PropTypes.func,
     stopLoad: PropTypes.func,
-    handleLogin: PropTypes.func,
+    startLogin: PropTypes.func,
     changeLogin: PropTypes.func,
     changePassword: PropTypes.func,
     openSnackBar: PropTypes.func,
@@ -40,7 +40,7 @@ export default class SignInPage extends Component {
     this.setState({ submitFlag: true });
     if (this.props.login && this.props.password) {
       this.props.startLoad();
-      this.props.handleLogin(this.props.login, this.props.password)
+      this.props.startLogin(this.props.login, this.props.password)
         .then((res) => {
           if (res.token) {
             browserHistory.replace('/main');

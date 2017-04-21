@@ -5,7 +5,7 @@ const GraphQLList = graphql.GraphQLList;
 
 module.exports = new GraphQLObjectType({
   name: 'User',
-  description: "Users",
+  description: "User",
   fields: {
     id: {
       type: GraphQLString,

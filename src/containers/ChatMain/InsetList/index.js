@@ -52,20 +52,18 @@ export default class InsetList extends Component {
     choosenMenuInset: PropTypes.string,
     user: PropTypes.object,
     friends: PropTypes.array,
-    handleAddUserFriend: PropTypes.func,
-    handleFindFriends: PropTypes.func,
-    handleGetUser: PropTypes.func,
-    handleGetFriends: PropTypes.func,
-    handleGetFriend: PropTypes.func,
-    handleRemoveFriend: PropTypes.func,
-    handleSetUser: PropTypes.func,
+    addFriend: PropTypes.func,
+    findFriend: PropTypes.func,
+    getFriend: PropTypes.func,
+    removeFriend: PropTypes.func,
+    setUser: PropTypes.func,
+    setFriends: PropTypes.func,
     openSnackBar: PropTypes.func,
   }
 
   state = {
     searchText: '',
-    findedFriends: undefined,
-    isFriendsModalOpen: false,
+    findedFriend: undefined,
   }
 
   getInsets() {
@@ -83,18 +81,21 @@ export default class InsetList extends Component {
     }
   }
 
+  getEmptyMessage = () => {
+    switch (this.props.choosenMenuInset) {
+      case 'friends': return 'Your friends will be here';
+      case 'chats': return 'Your chats will be here';
+      default: return '';
+    }
+  }
+
   handleChangeSearchText = (event) => this.setState({ searchText: event.target.value });
 
   handleFindFriend = () => {
-    return this.props.handleFindFriends(this.state.searchText)
+    return this.props.findFriend(this.state.searchText)
       .then((res) => {
-        const users = res.data.findFriends.users || [];
-        if (users.length) {
-          this.setState({
-            isFriendsModalOpen: true,
-            searchText: '',
-            findedFriends: users,
-          });
+        if (res.data.user) {
+          this.setState({ searchText: '', findedFriend: res.data.user });
         } else {
           this.props.openSnackBar({ message: "User not found" });
         }
@@ -103,23 +104,16 @@ export default class InsetList extends Component {
   }
 
   handleCloseFindFriendsModal = () =>
-    this.setState({
-      isFriendsModalOpen: false,
-      findedFriends: undefined,
-    });
+    this.setState({ findedFriend: undefined });
 
-  handleRemoveUserFriend = (friendId) => {
-    this.props.handleRemoveFriend(this.props.user.id, friendId)
-      .then((res) => {
-        this.props.handleSetUser(res.data.user);
-        this.props.handleGetFriends(res.data.user.friends);
-      });
-  }
+  handleRemoveUserFriend = (friendId) =>
+    this.props.removeFriend(this.props.user.id, friendId)
+      .then((res) => this.props.setUser(res.data.removeFriend.user))
+      .catch((err) => console.error(err)); // eslint-disable-line
 
   handleAddUserFriend = (userId, friendId) =>
-    this.props.handleAddUserFriend(userId, friendId)
-      .then(() => this.props.handleGetUser(userId))
-      .then(() => this.props.handleGetFriend(friendId))
+    this.props.addFriend(userId, friendId)
+      .then((res) => this.props.setUser(res.data.addFriend.user))
       .catch((err) => console.error(err)); // eslint-disable-line
 
   render() {
@@ -127,14 +121,9 @@ export default class InsetList extends Component {
     return (
       <div style={styles.insetList}>
         <div>{insets}</div>
-        {!insets.length && this.props.choosenMenuInset === 'friends' &&
+        {insets && !insets.length &&
           <div style={styles.emptyListMessage}>
-            Your friends will be here
-          </div>
-        }
-        {!insets.length && this.props.choosenMenuInset === 'chats' &&
-          <div style={styles.emptyListMessage}>
-            Your chats will be here
+            {this.getEmptyMessage()}
           </div>
         }
         <SearchPanel
@@ -145,7 +134,7 @@ export default class InsetList extends Component {
         />
         <FindFriendModal
           onClose={this.handleCloseFindFriendsModal}
-          findedFriends={this.state.findedFriends}
+          findedFriend={this.state.findedFriend}
           userFriends={this.props.user && this.props.user.friends}
           onAddFriend={this.handleAddUserFriend}
           userId={this.props.user && this.props.user.id}

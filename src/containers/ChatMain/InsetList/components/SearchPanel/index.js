@@ -39,6 +39,7 @@ export default class SearchPanel extends Component {
         <div style={styles.searchPanel}>
           <div style={styles.inputContainer}>
             <TextField
+              id="SearchPanel__input"
               style={styles.textFieldStyle}
               inputStyle={styles.textFieldInputStyle}
               errorText={this.state.isSubmit && !searchText && "This field is required."}

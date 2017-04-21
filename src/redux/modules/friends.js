@@ -6,17 +6,19 @@ export const GET_FRIEND = 'chat/friends/GET_FRIEND';
 export const GET_FRIEND_SUCCESS = 'chat/friends/GET_FRIEND_SUCCESS';
 export const GET_FRIEND_FAIL = 'chat/friends/GET_FRIEND_FAIL';
 
-export const REMOVE_FRIENDS = 'chat/friends/REMOVE_FRIEND';
-export const REMOVE_FRIENDS_SUCCESS = 'chat/friends/REMOVE_FRIEND_SUCCESS';
-export const REMOVE_FRIENDS_FAIL = 'chat/friends/REMOVE_FRIEND_FAIL';
+export const REMOVE_FRIEND = 'chat/friends/REMOVE_FRIEND';
+export const REMOVE_FRIEND_SUCCESS = 'chat/friends/REMOVE_FRIEND_SUCCESS';
+export const REMOVE_FRIEND_FAIL = 'chat/friends/REMOVE_FRIEND_FAIL';
 
-export const ADD_USER_FRIEND = 'little-chat/friends/ADD_USER_FRIEND';
-export const ADD_USER_FRIEND_SUCCESS = 'little-chat/friends/ADD_USER_FRIEND_SUCCESS';
-export const ADD_USER_FRIEND_FAIL = 'little-chat/friends/ADD_USER_FRIEND_FAIL';
+export const ADD_USER_FRIEND = 'chat/friends/ADD_USER_FRIEND';
+export const ADD_USER_FRIEND_SUCCESS = 'chat/friends/ADD_USER_FRIEND_SUCCESS';
+export const ADD_USER_FRIEND_FAIL = 'chat/friends/ADD_USER_FRIEND_FAIL';
 
-export const FIND_USER_FRIENDS = 'little-chat/friends/FIND_USER_FRIENDS';
-export const FIND_USER_FRIENDS_SUCCESS = 'little-chat/friends/FIND_USER_FRIENDS_SUCCESS';
-export const FIND_USER_FRIENDS_FAIL = 'little-chat/friends/FIND_USER_FRIENDS_FAIL';
+export const FIND_USER_FRIEND = 'chat/friends/FIND_USER_FRIEND';
+export const FIND_USER_FRIEND_SUCCESS = 'chat/friends/FIND_USER_FRIENDS_SUCCES';
+export const FIND_USER_FRIEND_FAIL = 'chat/friends/FIND_USER_FRIEND_FAIL';
+
+export const SET_FRIENDS_LIST = 'chat/friends/SET_FRIENDS_LIST';
 
 const initialState = {
   list: null,
@@ -36,12 +38,20 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       list: newClearFriends,
     };
-  case REMOVE_FRIENDS_SUCCESS:
-    const friends = state.list || [];
-    const newFriends = friends.filter(friend => friend.id !== action.result.data.user.id);
+  case ADD_USER_FRIEND_SUCCESS:
     return {
       ...state,
-      list: newFriends,
+      list: action.result.data.addFriend.friends,
+    };
+  case REMOVE_FRIEND_SUCCESS:
+    return {
+      ...state,
+      list: action.result.data.removeFriend.friends,
+    };
+  case SET_FRIENDS_LIST:
+    return {
+      ...state,
+      list: action.friends,
     };
   default:
     return state;
@@ -61,52 +71,32 @@ const getFriendsQLString = (ids) => {
 
 export const isLoadedFriends = (state) => state.friends.list;
 
-export const handleGetFriend = (id) => ({
+export const setFriends = (friends) => ({
+  type: SET_FRIENDS_LIST,
+  friends,
+});
+
+export const getFriend = (id) => ({
   types: [GET_FRIEND, GET_FRIEND_SUCCESS, GET_FRIEND_FAIL],
-  promise: (client) => client.post('/graphql', {
-    data: '{user(id: "' + id + '") {id, login, email, friends}}',
-    headers: {
-      "Content-Type": "application/graphql"
-    }
-  })
+  promise: (client) => client.graphql('{user(id: "' + id + '") {id, login, email, friends}}')
 });
 
-export const handleGetFriends = (ids) => ({
+export const getFriends = (ids) => ({
   types: [GET_FRIENDS, GET_FRIENDS_SUCCESS, GET_FRIENDS_FAIL],
-  promise: (client) => client.post('/graphql', {
-    data: '{users(ids: ' + getFriendsQLString(ids) + ') {id, login, email, friends}}',
-    headers: {
-      "Content-Type": "application/graphql"
-    }
-  })
+  promise: (client) => client.graphql('{users(ids: ' + getFriendsQLString(ids) + ') {id, login, email, friends}}')
 });
 
-export const handleRemoveFriend = (userId, friendId) => ({
-  types: [REMOVE_FRIENDS, REMOVE_FRIENDS_SUCCESS, REMOVE_FRIENDS_FAIL],
-  promise: (client) => client.post('/graphql', {
-    data: 'mutation {user: removeFriend(userId: "' + userId + '", friendId: "' + friendId + '") {id, login, email, friends}}',
-    headers: {
-      "Content-Type": "application/graphql"
-    }
-  })
+export const removeFriend = (userId, friendId) => ({
+  types: [REMOVE_FRIEND, REMOVE_FRIEND_SUCCESS, REMOVE_FRIEND_FAIL],
+  promise: (client) => client.graphql('mutation {removeFriend(userId: "' + userId + '", friendId: "' + friendId + '") {user {id, login, email, friends}, friends {id, login, email, friends}}}')
 });
 
-export const handleAddUserFriend = (userId, friendId) => ({
+export const addFriend = (userId, friendId) => ({
   types: [ADD_USER_FRIEND, ADD_USER_FRIEND_SUCCESS, ADD_USER_FRIEND_FAIL],
-  promise: (client) => client.post('/graphql', {
-    data: 'mutation {addFriend(userId: "' + userId + '", friendId: "' + friendId + '") {id}}',
-    headers: {
-      "Content-Type": "application/graphql"
-    }
-  })
+  promise: (client) => client.graphql('mutation {addFriend(userId: "' + userId + '", friendId: "' + friendId + '") {user {id, login, email, friends} friends {id, login, email, friends}}}')
 });
 
-export const handleFindFriends = (login) => ({
-  types: [FIND_USER_FRIENDS, FIND_USER_FRIENDS_SUCCESS, FIND_USER_FRIENDS_FAIL],
-  promise: (client) => client.post('/graphql', {
-    data: 'mutation {findFriends(login: "' + login + '") {users {id, login}}}',
-    headers: {
-      "Content-Type": "application/graphql"
-    }
-  })
+export const findFriend = (login) => ({
+  types: [FIND_USER_FRIEND, FIND_USER_FRIEND_SUCCESS, FIND_USER_FRIEND_FAIL],
+  promise: (client) => client.graphql('mutation {user: findFriend(login: "' + login + '") {id, login, email, friends}}')
 });

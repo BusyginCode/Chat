@@ -44,6 +44,7 @@ export default function reducer(state = initialState, action = {}) {
         user: action.user,
       };
     case GET_USER_SUCCESS:
+    console.log('GET USER SUCCESS ', action);
       return {
         ...state,
         user: action.result.data.user,
@@ -125,7 +126,7 @@ export const changePassword = (value) => {
   };
 };
 
-export const handleLogin = (login, password) => ({
+export const startLogin = (login, password) => ({
   types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
   promise: (client) => client.post('/signin', {
     data: {
@@ -135,7 +136,7 @@ export const handleLogin = (login, password) => ({
   })
 });
 
-export const handleSignUp = (email, login, password) => ({
+export const startSignUp = (email, login, password) => ({
   types: [SIGNUP, SIGNUP_SUCCESS, SIGNUP_FAIL],
   promise: (client) => client.post('/signup', {
     data: {
@@ -169,17 +170,12 @@ export const clearStore = () => ({
   type: CLEAR_STORE
 });
 
-export const handleSetUser = (user) => ({
+export const setUser = (user) => ({
   type: SET_USER,
   user
 });
 
-export const handleGetUser = (id) => ({
+export const getUser = (id) => ({
   types: [GET_USER, GET_USER_SUCCESS, GET_USER_FAIL],
-  promise: (client) => client.post('/graphql', {
-    data: '{user(id: "' + id + '") {id, login, email, friends}}',
-    headers: {
-      "Content-Type": "application/graphql"
-    }
-  })
+  promise: (client) => client.graphql('{user(id: "' + id + '") {id, login, email, friends}}')
 });

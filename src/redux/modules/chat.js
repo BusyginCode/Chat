@@ -34,17 +34,17 @@ export default function reducer(state = initialState, action) {
   }
 }
 
-export const handleChangeMenuInset = (inset) => ({
+export const changeMenuInset = (inset) => ({
   type: CHANGE_MENU_INSET,
   inset
 });
 
-export const handleMutation = () => ({
-  types: [GET_MUTATION, GET_MUTATION_SUCCESS, GET_MUTATION_FAIL],
-  promise: (client) => client.post('/graphql', {
-    data: 'mutation {createUser(login: "Graph", email: "graph@email.com", password: "odugihfisghs") {id, login}}',
-    headers: {
-      "Content-Type": "application/graphql"
-    }
-  })
-});
+// export const handleMutation = () => ({
+//   types: [GET_MUTATION, GET_MUTATION_SUCCESS, GET_MUTATION_FAIL],
+//   promise: (client) => client.post('/graphql', {
+//     data: 'mutation {createUser(login: "Graph", email: "graph@email.com", password: "odugihfisghs") {id, login}}',
+//     headers: {
+//       "Content-Type": "application/graphql"
+//     }
+//   })
+// });

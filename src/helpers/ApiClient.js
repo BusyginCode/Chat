@@ -50,5 +50,12 @@ export default class ApiClient {
           });
         })// .catch(err => console.log(err))
     );
+
+    this.graphql = (string) => this.post('/graphql', {
+      data: string,
+      headers: {
+        "Content-Type": "application/graphql"
+      }
+    });
   }
 }

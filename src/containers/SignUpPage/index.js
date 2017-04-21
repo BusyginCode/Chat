@@ -26,7 +26,7 @@ export default class SignUpPage extends Component {
     error: PropTypes.object,
     stopLoad: PropTypes.func,
     startLoad: PropTypes.func,
-    handleSignUp: PropTypes.func,
+    startSignUp: PropTypes.func,
     changeLogin: PropTypes.func,
     changePassword: PropTypes.func,
     changeEmail: PropTypes.func,
@@ -42,7 +42,7 @@ export default class SignUpPage extends Component {
     this.setState({ submitFlag: true });
     if (this.props.email && this.props.password && this.props.login) {
       this.props.startLoad();
-      this.props.handleSignUp(
+      this.props.startSignUp(
         this.props.email,
         this.props.login,
         this.props.password

@@ -9,22 +9,12 @@ module.exports = {
     login: {
       name: 'Login',
       type: GraphQLString
-    },
-    email: {
-      name: 'Email',
-      type: GraphQLString
-    },
-    password: {
-      name: 'Password',
-      type: GraphQLString
     }
   },
   resolve: (source, args) => {
-    const newUser = Db.createUser({
+    const user = Db.findUser({
       login: args.login,
-      password: args.password,
-      email: args.email,
-    })
-    return new Promise(res => res(newUser))
+    });
+    return new Promise(res => res(user))
   }
 }

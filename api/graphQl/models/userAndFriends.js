@@ -1,16 +1,21 @@
 const graphql = require('graphql');
 const GraphQLObjectType = graphql.GraphQLObjectType;
+const GraphQLString = graphql.GraphQLString;
 const GraphQLList = graphql.GraphQLList;
 
 const User = require('./user');
 
 module.exports = new GraphQLObjectType({
-  name: 'Users',
-  description: "Type for user search",
+  name: 'RemoveUser',
+  description: "Remove User",
   fields: {
-    users: {
+    user: {
+      type: User,
+      description: "User",
+    },
+    friends: {
       type: new GraphQLList(User),
-      description: "List of users",
+      description: "List of user friends",
     }
   }
 });

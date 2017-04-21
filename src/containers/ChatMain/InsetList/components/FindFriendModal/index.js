@@ -10,7 +10,7 @@ export default class FindFriendModal extends Component {
   static propTypes = {
     onAddFriend: PropTypes.func,
     onClose: PropTypes.func,
-    findedFriends: PropTypes.array,
+    findedFriend: PropTypes.object,
     userFriends: PropTypes.array,
     userId: PropTypes.string,
   }
@@ -23,7 +23,7 @@ export default class FindFriendModal extends Component {
   render() {
     const {
       onClose,
-      findedFriends,
+      findedFriend,
       userFriends,
       userId
     } = this.props;
@@ -31,27 +31,27 @@ export default class FindFriendModal extends Component {
       <Dialog
         title="Finded users:"
         modal={false}
-        open={Boolean(findedFriends)}
+        open={Boolean(findedFriend)}
         onRequestClose={onClose}
         contentStyle={styles.dialogContentStyle}
       >
         <List>
-          {findedFriends && findedFriends.map(man =>
+          {findedFriend &&
             <div key={Math.random()}>
               <ListItem
-                primaryText={man.login}
-                rightIcon={!userFriends.includes(man.id) ?
+                primaryText={findedFriend.login}
+                rightIcon={!userFriends.includes(findedFriend.id) ?
                   <RaisedButton
                     label="Add"
                     primary
-                    onClick={() => this.handleClose(userId, man.id)} // eslint-disable-line
+                    onClick={() => this.handleClose(userId, findedFriend.id)} // eslint-disable-line
                   />
                   : <div>Added</div>
                 }
               />
               <Divider />
             </div>
-          )}
+          }
         </List>
       </Dialog>
     );
