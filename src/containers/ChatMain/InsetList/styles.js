@@ -9,5 +9,9 @@ export default {
     textAlign: 'center',
     fontSize: '1.2em',
     color: 'gray',
+    height: '85%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   }
 };

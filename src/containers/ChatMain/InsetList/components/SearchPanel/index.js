@@ -51,6 +51,7 @@ export default class SearchPanel extends Component {
             <RaisedButton
               style={styles.submitButton}
               label="Search"
+              primary
               onClick={this.handleSubmit}
             />
           </div>

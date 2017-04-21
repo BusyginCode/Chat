@@ -4,29 +4,33 @@ import {
   deleteAuthToken,
   deleteAuthStoreToken,
 } from 'redux/modules/auth';
+import { clearFriends } from 'redux/modules/friends';
 import { Link, browserHistory } from 'react-router';
+const styles = require('./headerStyles.js');
+const logo = require('./img/chat.svg');
 
 @connect(
   state => ({
     token: state.auth.token,
   }),
-  { deleteAuthStoreToken }
+  { deleteAuthStoreToken, clearFriends }
 )
 export default class Header extends Component {
 
   static propTypes = {
     token: PropTypes.string,
+    clearFriends: PropTypes.func,
     deleteAuthStoreToken: PropTypes.func,
   }
 
   handleExit = () => {
     deleteAuthToken();
     this.props.deleteAuthStoreToken();
+    this.props.clearFriends();
     browserHistory.replace('/');
   }
 
   renderLinks() {
-    const styles = require('./headerStyles.js');
     return (
       this.props.token ?
         <div style={styles.menu}>
@@ -45,10 +49,12 @@ export default class Header extends Component {
   }
 
   render() {
-    const styles = require('./headerStyles.js');
     return (
       <nav style={ styles.headerContainer }>
-        <span style={ styles.headerTitle }>Little Chat</span>
+        <div style={ styles.headerTitleContainer }>
+          <img style={styles.headerLogo} src={logo} alt="#" />
+          <span style={ styles.headerTitle }>Little Chat</span>
+        </div>
         { this.renderLinks() }
       </nav>
     );

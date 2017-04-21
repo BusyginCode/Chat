@@ -8,10 +8,12 @@ export default {
     position: 'absolute',
     top: 0,
     bottom: 0,
-    left: 0,
+    left: '50%',
+    transform: 'translateX(-50%)',
+    maxHeight: '1900px',
   },
   chat: {
-    flex: 1
+    width: '100%',
   },
   menuBar: {
     width: '100px',
@@ -19,9 +21,9 @@ export default {
     backgroundColor: '#282f37',
   },
   menuContainer: {
-    flex: 0.3,
-    backgroundColor: 'rgba(40, 47, 55, 0.8)',
+    borderRight: '1px solid #e0e0e0',
     overflow: 'auto',
-    minWidth: '300px',
+    maxWidth: '300px',
+    width: '30%',
   }
 };

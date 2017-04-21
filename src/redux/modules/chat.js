@@ -10,27 +10,24 @@ export const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-  case GET_MUTATION:
-    console.log('get mutation', action);
-    return {
-      ...state,
-    };
-  case GET_MUTATION_SUCCESS:
-    console.log('get mutation success', action);
-    return {
-      ...state,
-    };
-  case GET_MUTATION_FAIL:
-    console.log('get mutation fail', action);
-    return {
-      ...state,
-    };
-  case CHANGE_MENU_INSET:
-    return {
-      ...state,
-      choosenMenuInset: action.inset
-    };
-  default: return state;
+    case GET_MUTATION:
+      return {
+        ...state,
+      };
+    case GET_MUTATION_SUCCESS:
+      return {
+        ...state,
+      };
+    case GET_MUTATION_FAIL:
+      return {
+        ...state,
+      };
+    case CHANGE_MENU_INSET:
+      return {
+        ...state,
+        choosenMenuInset: action.inset
+      };
+    default: return state;
   }
 }
 

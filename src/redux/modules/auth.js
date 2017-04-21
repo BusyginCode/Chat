@@ -44,7 +44,6 @@ export default function reducer(state = initialState, action = {}) {
         user: action.user,
       };
     case GET_USER_SUCCESS:
-    console.log('GET USER SUCCESS ', action);
       return {
         ...state,
         user: action.result.data.user,

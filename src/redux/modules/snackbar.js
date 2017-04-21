@@ -12,17 +12,17 @@ export const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-  case OPEN_BAR:
-    return {
-      ...state,
-      isOpen: true,
-      message: action.message,
-      duration: action.duration || 2000,
-      type: action.snackBarType || 'error',
-      className: action.className,
-    };
-  case CLOSE_BAR: return initialState;
-  default: return state;
+    case OPEN_BAR:
+      return {
+        ...state,
+        isOpen: true,
+        message: action.message,
+        duration: action.duration || 2000,
+        type: action.snackBarType || 'error',
+        className: action.className,
+      };
+    case CLOSE_BAR: return initialState;
+    default: return state;
   }
 }
 

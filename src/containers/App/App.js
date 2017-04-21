@@ -13,12 +13,7 @@ import { Header, ReactLoader, SnackBar } from 'containers';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
-const styles = {
-  app: {
-    flex: 1,
-    padding: '0 20px',
-  },
-};
+const styles = require('./styles');
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
@@ -51,19 +46,13 @@ export default class App extends Component {
   }
 
   render() {
-    const containerStyle = {
-      marginTop: '70px',
-      maxWidth: '1900px',
-      display: 'flex',
-      justifyContent: 'center',
-    };
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
-        <div style={ styles.app }>
+        <div style={styles.app}>
           <ReactLoader />
           <Header />
-          <div style={containerStyle}>
-            { this.props.children }
+          <div style={styles.containerStyle}>
+            {this.props.children}
           </div>
           <SnackBar />
         </div>

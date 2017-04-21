@@ -20,41 +20,44 @@ export const FIND_USER_FRIEND_FAIL = 'chat/friends/FIND_USER_FRIEND_FAIL';
 
 export const SET_FRIENDS_LIST = 'chat/friends/SET_FRIENDS_LIST';
 
+export const CLEAR_STORE = 'chat/friends/CLEAR_STORE';
+
 const initialState = {
   list: null,
 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case GET_FRIENDS_SUCCESS:
-    return {
-      ...state,
-      list: action.result.data.users,
-    };
-  case GET_FRIEND_SUCCESS:
-    const oldFriends = state.list || [];
-    const newClearFriends = [...oldFriends, action.result.data.user];
-    return {
-      ...state,
-      list: newClearFriends,
-    };
-  case ADD_USER_FRIEND_SUCCESS:
-    return {
-      ...state,
-      list: action.result.data.addFriend.friends,
-    };
-  case REMOVE_FRIEND_SUCCESS:
-    return {
-      ...state,
-      list: action.result.data.removeFriend.friends,
-    };
-  case SET_FRIENDS_LIST:
-    return {
-      ...state,
-      list: action.friends,
-    };
-  default:
-    return state;
+    case GET_FRIENDS_SUCCESS:
+      return {
+        ...state,
+        list: action.result.data.users,
+      };
+    case GET_FRIEND_SUCCESS:
+      const oldFriends = state.list || [];
+      const newClearFriends = [...oldFriends, action.result.data.user];
+      return {
+        ...state,
+        list: newClearFriends,
+      };
+    case ADD_USER_FRIEND_SUCCESS:
+      return {
+        ...state,
+        list: action.result.data.addFriend.friends,
+      };
+    case REMOVE_FRIEND_SUCCESS:
+      return {
+        ...state,
+        list: action.result.data.removeFriend.friends,
+      };
+    case SET_FRIENDS_LIST:
+      return {
+        ...state,
+        list: action.friends,
+      };
+    case CLEAR_STORE: return initialState;
+    default:
+      return state;
   }
 }
 
@@ -68,6 +71,8 @@ const getFriendsQLString = (ids) => {
   }
   return "[]";
 };
+
+export const clearFriends = () => ({ type: CLEAR_STORE });
 
 export const isLoadedFriends = (state) => state.friends.list;
 

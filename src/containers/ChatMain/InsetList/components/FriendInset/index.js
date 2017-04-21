@@ -1,8 +1,25 @@
 import React, { Component, PropTypes } from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentClear from 'material-ui/svg-icons/content/clear';
+import {ListItem} from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import Avatar from 'material-ui/Avatar';
+import {grey400} from 'material-ui/styles/colors';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
 import './friend-inset.scss';
-const styles = require('./styles');
+// const styles = require('./styles');
+const logo = require("./img/ok-128.jpg");
+
+const iconButtonElement = (
+  <IconButton
+    touch
+    tooltip="more"
+    tooltipPosition="bottom-left"
+  >
+    <MoreVertIcon color={grey400} />
+  </IconButton>
+);
 
 export default class FriendInset extends Component {
 
@@ -12,24 +29,23 @@ export default class FriendInset extends Component {
     onRemoveFriends: PropTypes.func,
   }
 
+  getFriendMenu = () =>
+    <IconMenu iconButtonElement={iconButtonElement}>
+      <MenuItem onClick={this.props.onRemoveFriends}>
+        Remove
+      </MenuItem>
+    </IconMenu>
+
   render() {
-    const { login, logo, onRemoveFriends } = this.props;
+    const { login } = this.props;
     return (
-      <div className="FriendInset" style={styles.friendInset}>
-        <div style={styles.friendInsetLogo}>{logo}</div>
-        <div
-          className="FriendInset__login"
-          style={styles.friendInsetLogin}
-        >
-          {login}
-        </div>
-        <FloatingActionButton
-          mini
-          onClick={onRemoveFriends}
-          title="Remove friend"
-        >
-          <ContentClear />
-        </FloatingActionButton>
+      <div>
+        <ListItem
+          leftAvatar={<Avatar src={logo} />}
+          rightIconButton={this.getFriendMenu()}
+          primaryText={login}
+        />
+        <Divider />
       </div>
     );
   }

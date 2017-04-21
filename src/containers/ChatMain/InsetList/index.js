@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import {List} from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
 import * as ChatReduser from 'redux/modules/chat';
 import * as AuthReduser from 'redux/modules/auth';
 import * as FriendsReduser from 'redux/modules/friends';
@@ -9,34 +11,6 @@ import ChatInset from './components/ChatInset';
 import SearchPanel from './components/SearchPanel';
 import FindFriendModal from './components/FindFriendModal';
 const styles = require('./styles');
-
-var chats = [ // eslint-disable-line
-  {
-    participants: ['Dima'],
-    date: "28/10/1997",
-    lastMessage: 'Message'
-  },
-  {
-    participants: ['Dima'],
-    date: "28/10/1997",
-    lastMessage: 'Message'
-  },
-  {
-    participants: ['Dima'],
-    date: "28/10/1997",
-    lastMessage: 'Message'
-  },
-  {
-    participants: ['Dima'],
-    date: "28/10/1997",
-    lastMessage: 'Message'
-  },
-  {
-    participants: ['Dima'],
-    date: "28/10/1997",
-    lastMessage: 'Message'
-  },
-];
 
 @connect(
   state => ({
@@ -68,16 +42,16 @@ export default class InsetList extends Component {
 
   getInsets() {
     switch (this.props.choosenMenuInset) {
-    case 'friends': return this.props.friends &&
-      this.props.friends.map(friend =>
-        <FriendInset
-          key={Math.random()}
-          onRemoveFriends={() => this.handleRemoveUserFriend(friend.id)} // eslint-disable-line
-          {...friend}
-        />
-      );
-    case 'chats': return chats.map(chat => <ChatInset key={Math.random()} {...chat} />);
-    default: return [];
+      case 'friends': return this.props.friends &&
+        this.props.friends.map(friend =>
+          <FriendInset
+            key={Math.random()}
+            onRemoveFriends={() => this.handleRemoveUserFriend(friend.id)} // eslint-disable-line
+            {...friend}
+          />
+        );
+      case 'chats': return [].map(chat => <ChatInset key={Math.random()} {...chat} />);
+      default: return [];
     }
   }
 
@@ -120,7 +94,12 @@ export default class InsetList extends Component {
     const insets = this.getInsets();
     return (
       <div style={styles.insetList}>
-        <div>{insets}</div>
+        {insets && !!insets.length &&
+          <List>
+            <Subheader>Friends</Subheader>
+            {insets}
+          </List>
+        }
         {insets && !insets.length &&
           <div style={styles.emptyListMessage}>
             {this.getEmptyMessage()}

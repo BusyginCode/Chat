@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import Dialog from 'material-ui/Dialog';
-import { List, ListItem } from 'material-ui/List';
+import { ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
+import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 const styles = require('./styles');
 
@@ -15,44 +16,66 @@ export default class FindFriendModal extends Component {
     userId: PropTypes.string,
   }
 
-  handleClose = (userId, friendId) => {
-    this.props.onAddFriend(userId, friendId);
+  handleAddFriend = () => {
+    const { findedFriend, userId } = this.props;
+    this.props.onAddFriend(userId, findedFriend.id);
     this.props.onClose();
+  }
+
+  get actions() {
+    return [
+      <FlatButton
+        label="Cancel"
+        primary
+        onTouchTap={this.props.onClose}
+      />
+    ];
+  }
+
+  get rightIcon() {
+    const { findedFriend, userFriends, userId } = this.props;
+    if (!userFriends.includes(findedFriend.id) && findedFriend.id !== userId) {
+      return (
+        <RaisedButton
+          label="Add"
+          style={styles.addButton}
+          primary
+          onClick={this.handleAddFriend}
+        />
+      );
+    }
+    return (
+      <div style={styles.addedFriendMessage}>
+        {findedFriend.id !== userId ? 'Added' : "It's you!"}
+      </div>
+    );
   }
 
   render() {
     const {
       onClose,
       findedFriend,
-      userFriends,
-      userId
     } = this.props;
+
     return (
       <Dialog
-        title="Finded users:"
+        title="Found user:"
         modal={false}
         open={Boolean(findedFriend)}
         onRequestClose={onClose}
         contentStyle={styles.dialogContentStyle}
+        bodyStyle={styles.dialogBodyStyle}
+        actions={this.actions}
       >
-        <List>
-          {findedFriend &&
-            <div key={Math.random()}>
-              <ListItem
-                primaryText={findedFriend.login}
-                rightIcon={!userFriends.includes(findedFriend.id) ?
-                  <RaisedButton
-                    label="Add"
-                    primary
-                    onClick={() => this.handleClose(userId, findedFriend.id)} // eslint-disable-line
-                  />
-                  : <div>Added</div>
-                }
-              />
-              <Divider />
-            </div>
-          }
-        </List>
+        {findedFriend &&
+          <div>
+            <ListItem
+              primaryText={findedFriend.login}
+              rightIcon={this.rightIcon}
+            />
+            <Divider />
+          </div>
+        }
       </Dialog>
     );
   }

@@ -41,5 +41,14 @@ export default {
     alignItems: 'center',
     marginLeft: '15px',
     fontSize: '23px',
+  },
+  headerLogo: {
+    width: '40px',
+    height: '40px',
+    marginLeft: '15px',
+  },
+  headerTitleContainer: {
+    display: 'flex',
+    alignItems: 'center',
   }
 };

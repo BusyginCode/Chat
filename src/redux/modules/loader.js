@@ -8,17 +8,17 @@ export const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-  case START_LOAD:
-    return {
-      ...state,
-      load: 0,
-    };
-  case STOP_LOAD:
-    return {
-      ...state,
-      load: 100,
-    };
-  default: return state;
+    case START_LOAD:
+      return {
+        ...state,
+        load: 0,
+      };
+    case STOP_LOAD:
+      return {
+        ...state,
+        load: 100,
+      };
+    default: return state;
   }
 }
 

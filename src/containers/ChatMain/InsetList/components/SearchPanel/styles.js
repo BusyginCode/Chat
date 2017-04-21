@@ -16,9 +16,6 @@ export default {
   textFieldStyle: {
     width: '100%'
   },
-  textFieldInputStyle: {
-    color: 'white'
-  },
   submitButton: {
     width: '50%',
   }
