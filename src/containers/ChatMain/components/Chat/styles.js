@@ -3,7 +3,11 @@ export default {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    height: '100%',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
     width: '97%',
     margin: '0 auto',
   },
@@ -20,4 +24,8 @@ export default {
   sendButton: {
     maxWidth: '122px',
   },
+  message: {
+    whiteSpace: 'normal',
+  }
+
 };

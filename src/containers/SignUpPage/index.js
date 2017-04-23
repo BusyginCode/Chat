@@ -14,6 +14,7 @@ const styles = require('./styles');
     login: state.auth.login,
     password: state.auth.password,
     email: state.auth.email,
+    photo: state.auth.photo,
     error: state.auth.error
   }),
   { ...authActions, ...loaderActions, openSnackBar })
@@ -23,12 +24,14 @@ export default class SignUpPage extends Component {
     login: PropTypes.string,
     password: PropTypes.string,
     email: PropTypes.string,
+    photo: PropTypes.string,
     error: PropTypes.object,
     stopLoad: PropTypes.func,
     startLoad: PropTypes.func,
     startSignUp: PropTypes.func,
     changeLogin: PropTypes.func,
     changePassword: PropTypes.func,
+    changePhoto: PropTypes.func,
     changeEmail: PropTypes.func,
     clearStore: PropTypes.func,
     openSnackBar: PropTypes.func,
@@ -36,6 +39,7 @@ export default class SignUpPage extends Component {
 
   state = {
     submitFlag: false,
+    file: null,
   }
 
   handleSubmit = () => {
@@ -45,7 +49,8 @@ export default class SignUpPage extends Component {
       this.props.startSignUp(
         this.props.email,
         this.props.login,
-        this.props.password
+        this.props.password,
+        JSON.stringify(this.state.file),
       )
       .then(() => {
         browserHistory.push('/main');
@@ -72,6 +77,19 @@ export default class SignUpPage extends Component {
   handleEmailChange = (event) => {
     this.setState({ submitFlag: false });
     this.props.changeEmail(event.target.value);
+  }
+
+  handleUploadPhoto = (event) => {
+    const formData = new FormData();
+    const file = event.target.files[0];
+    formData.append('file', file);
+    this.setState({
+      file: file,
+    });
+    const newFile = { ...file };
+    console.log(file);
+    console.log(newFile);
+    this.props.changePhoto(JSON.stringify(newFile));
   }
 
   render() {
@@ -115,6 +133,20 @@ export default class SignUpPage extends Component {
           style={styles.SignUpPage__input}
           onChange={this.handlePasswordChange}
         />
+        <RaisedButton
+          label="Photo"
+          containerElement="label"
+          primary
+          style={styles.uploadButton}
+        >
+          <input
+            id="signUpUploadFile"
+            type="file"
+            accept="image/*"
+            style={styles.photoInput}
+            onChange={this.handleUploadPhoto}
+          />
+        </RaisedButton>
         <RaisedButton
           label="Sign Up"
           primary

@@ -3,7 +3,7 @@ import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
 import Avatar from 'material-ui/Avatar';
-import {grey400, darkBlack} from 'material-ui/styles/colors';
+import { grey400 } from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import IconMenu from 'material-ui/IconMenu';
@@ -12,6 +12,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 const styles = require('./styles');
 const logo = require("./img/ok-128.jpg");
+
 const iconButtonElement = (
   <IconButton
     touch
@@ -50,11 +51,10 @@ export default class Chat extends Component {
             rightIconButton={rightIconMenu}
             primaryText="Brendan Lim"
             secondaryText={
-              <p style={{color: darkBlack}}>Brunch this weekend?</p>
+              <span style={styles.message}>Brunch this weekend?</span>
             }
-            secondaryTextLines={2}
           />
-          <Divider inset />
+          <Divider />
         </List>
         <div style={styles.actionsContainer}>
           <TextField

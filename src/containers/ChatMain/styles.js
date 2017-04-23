@@ -14,6 +14,7 @@ export default {
   },
   chat: {
     width: '100%',
+    position: 'relative',
   },
   menuBar: {
     width: '100px',
@@ -25,5 +26,6 @@ export default {
     overflow: 'auto',
     maxWidth: '300px',
     width: '30%',
+    position: 'relative',
   }
 };

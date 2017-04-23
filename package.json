@@ -122,6 +122,7 @@
     "react-bootstrap": "^0.28.1",
     "react-cookie": "^0.4.8",
     "react-dom": "^15.3.2",
+    "react-filepicker": "^0.10.15",
     "react-helmet": "^2.2.0",
     "react-inline-css": "^2.0.0",
     "react-loader": "^2.4.0",

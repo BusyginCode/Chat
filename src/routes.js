@@ -7,7 +7,6 @@ import {
   ChatMain,
   NotFound,
   SignUpPage,
-  Home,
 } from 'containers';
 
 export default (store) => {
@@ -31,9 +30,8 @@ export default (store) => {
   return (
     <Route history={browserHistory} path="/" component={App}>
       { /* Home (main) route */ }
-      <IndexRoute component={Home}/>
+      <IndexRoute component={SignInPage}/>
       <Route path="signUp" component={SignUpPage} />
-      <Route path="signIn" component={SignInPage} />
       <Route onEnter={requireLogin}>
         <Route path="main" component={ChatMain} />
       </Route>

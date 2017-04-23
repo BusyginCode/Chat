@@ -34,15 +34,13 @@ export default class Header extends Component {
     return (
       this.props.token ?
         <div style={styles.menu}>
-          <Link style={styles.link} to="/">Home</Link>
           <Link style={styles.link} to="/main">Main</Link>
           <div onClick={this.handleExit} style={ styles.link }>
             Exit
           </div>
         </div>
       : <div style={styles.menu}>
-          <Link style={styles.link} to="/">Home</Link>
-          <Link style={styles.link} to="/signIn">Sign In</Link>
+          <Link style={styles.link} to="/">Sign In</Link>
           <Link style={styles.link} to="/signUp">Sign Up</Link>
         </div>
     );
@@ -52,7 +50,7 @@ export default class Header extends Component {
     return (
       <nav style={ styles.headerContainer }>
         <div style={ styles.headerTitleContainer }>
-          <img style={styles.headerLogo} src={logo} alt="#" />
+          <img style={styles.headerLogo} src={logo} alt="#" id="header_logo" />
           <span style={ styles.headerTitle }>Little Chat</span>
         </div>
         { this.renderLinks() }

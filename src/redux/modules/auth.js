@@ -15,6 +15,7 @@ export const CLEAR_STORE = 'chat/auth/CLEAR_STORE';
 export const CHANGE_EMAIL = 'chat/auth/CHANGE_EMAIL';
 export const CHANGE_LOGIN = 'chat/auth/CHANGE_LOGIN';
 export const CHANGE_PASSWORD = 'chat/auth/CHANGE_PASSWORD';
+export const CHANGE_PHOTO = 'chat/auth/CHANGE_PHOTO';
 
 export const LOGIN = 'chat/auth/LOGIN';
 export const LOGIN_SUCCESS = 'chat/auth/LOGIN_SUCCESS';
@@ -32,6 +33,7 @@ const initialState = {
   loaded: false,
   password: '',
   login: '',
+  photo: null,
   token: null,
   error: null
 };
@@ -68,6 +70,11 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         password: action.password
+      };
+    case CHANGE_PHOTO:
+      return {
+        ...state,
+        photo: action.photo,
       };
     case LOGIN_SUCCESS:
       return {
@@ -118,12 +125,15 @@ export const changeLogin = (value) => ({
   login: value
 });
 
-export const changePassword = (value) => {
-  return {
-    type: CHANGE_PASSWORD,
-    password: value
-  };
-};
+export const changePassword = (value) => ({
+  type: CHANGE_PASSWORD,
+  password: value
+});
+
+export const changePhoto = (photo) => ({
+  type: CHANGE_PHOTO,
+  photo,
+});
 
 export const startLogin = (login, password) => ({
   types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
@@ -135,13 +145,14 @@ export const startLogin = (login, password) => ({
   })
 });
 
-export const startSignUp = (email, login, password) => ({
+export const startSignUp = (email, login, password, photo) => ({
   types: [SIGNUP, SIGNUP_SUCCESS, SIGNUP_FAIL],
   promise: (client) => client.post('/signup', {
     data: {
       email,
       login,
-      password
+      password,
+      photo,
     }
   })
 });
