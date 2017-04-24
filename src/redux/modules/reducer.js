@@ -8,7 +8,7 @@ import chat from './chat';
 import loader from './loader';
 import snackbar from './snackbar';
 
-export default combineReducers({
+export default (apollo) => combineReducers({
   routing: routerReducer,
   reduxAsyncConnect,
   auth,
@@ -16,4 +16,5 @@ export default combineReducers({
   chat,
   friends,
   snackbar,
+  apollo,
 });

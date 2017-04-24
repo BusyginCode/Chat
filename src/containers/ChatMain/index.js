@@ -8,7 +8,20 @@ import InsetList from './InsetList';
 // import MenuBar from './components/MenuBar';
 import Chat from './components/Chat';
 import io from 'socket.io-client';
+import { gql, graphql } from 'react-apollo';
 
+const CurrentUserForLayout = gql`
+  {
+    user(id: "58f9b087b91efa257601a4f9") {
+      id,
+      login,
+      email,
+      friends
+    }
+  }
+`;
+
+@graphql(CurrentUserForLayout)
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
     const promises = [];

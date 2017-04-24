@@ -16,8 +16,9 @@ import http from 'http';
 import { match } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { ReduxAsyncConnect, loadOnServer } from 'redux-async-connect';
+import { ApolloClient, createNetworkInterface, ApolloProvider } from 'react-apollo';
 import createHistory from 'react-router/lib/createMemoryHistory';
-import {Provider} from 'react-redux';
+// import {Provider} from 'react-redux';
 import getRoutes from './routes';
 const bodyParser = require('body-parser')
 
@@ -45,9 +46,17 @@ app.use((req, res) => {
     // hot module replacement is enabled in the development env
     webpackIsomorphicTools.refresh();
   }
+  const networkInterface = createNetworkInterface({
+    uri: `http://${config.graphQlHost}:${config.graphQlPort}`
+  });
+
+  const apolloClient = new ApolloClient({
+    networkInterface: networkInterface
+  });
+
   const client = new ApiClient(req);
   const memoryHistory = createHistory(req.originalUrl);
-  const store = createStore(memoryHistory, client);
+  const store = createStore(memoryHistory, client, {}, apolloClient);
   const history = syncHistoryWithStore(memoryHistory, store);
 
   function hydrateOnClient() {
@@ -70,9 +79,9 @@ app.use((req, res) => {
     } else if (renderProps) {
       loadOnServer({...renderProps, store, helpers: {client}}).then(() => {
         const component = (
-          <Provider store={store} key="provider">
+          <ApolloProvider store={store} key="provider" client={apolloClient}>
             <ReduxAsyncConnect {...renderProps} />
-          </Provider>
+          </ApolloProvider>
         );
 
         res.status(200);
