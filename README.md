@@ -6,3 +6,4 @@ For start application locally you need to run a number of commands:
 5) mongo
 6) npm run start-dev-api(yarn start-dev-api)
 7) npm run dev(yarn dev)
+8) npm rebuild node-sass (if necessary)
